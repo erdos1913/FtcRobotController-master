@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 public class Teleop {
 
-    // Mr. Sweeney is a dunderhead
-    // Mr. McKeown can't contribute anything'
+    // Mr. Sweeney is a programmer
+    // Mr. McKeown is a design engineer
+    // Dr. Moody is a design engineer
 }
