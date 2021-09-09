@@ -53,7 +53,6 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @Autonomous()
-@Disabled
 public class KareemAuto extends LinearOpMode {
 
     // Declare OpMode members.
@@ -67,7 +66,7 @@ public class KareemAuto extends LinearOpMode {
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        
+
         frontLeft  = hardwareMap.get(DcMotor.class, "frontLeft");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         frontRight  = hardwareMap.get(DcMotor.class, "frontRight");
