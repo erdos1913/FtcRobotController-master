@@ -12,16 +12,24 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class AlexTeleOp extends LinearOpMode {
 
     private Gyroscope imu;
-    private DcMotor motorTest;
     private DigitalChannel digitalTouch;
     private DistanceSensor sensorColorRange;
     private Servo servoTest;
 
+    private DcMotor frontLeft = null;
+    private DcMotor frontRight = null;
+    private DcMotor backLeft = null;
+    private DcMotor backRight = null;
 
     @Override
     public void runOpMode() {
+
         imu = hardwareMap.get(Gyroscope.class, "imu");
-        motorTest = hardwareMap.get(DcMotor.class, "motorTest");
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
+        backRight = hardwareMap.get(DcMotor.class, "backRight");
+
         digitalTouch = hardwareMap.get(DigitalChannel.class, "digitalTouch");
         sensorColorRange = hardwareMap.get(DistanceSensor.class, "sensorColorRange");
         servoTest = hardwareMap.get(Servo.class, "servoTest");
