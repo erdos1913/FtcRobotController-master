@@ -52,7 +52,6 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
-@Disabled
 public class EhrensAuto extends LinearOpMode {
 
     // Declare OpMode members.
