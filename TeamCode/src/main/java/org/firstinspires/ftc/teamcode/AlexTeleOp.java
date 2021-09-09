@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 public class AlexTeleOp extends LinearOpMode {
@@ -16,6 +17,7 @@ public class AlexTeleOp extends LinearOpMode {
     private DistanceSensor sensorColorRange;
     private Servo servoTest;
 
+    private ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
     private DcMotor backLeft = null;
