@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 @TeleOp
 public class AlexTeleOp extends LinearOpMode {
@@ -41,12 +42,22 @@ public class AlexTeleOp extends LinearOpMode {
 // Wait for the game to start (driver presses PLAY)
 
         waitForStart();
+        runtime.reset();
 
 // run until the end of the match (driver presses STOP)
 
         while (opModeIsActive()) {
-        telemetry.addData("Status", "Running");
-        telemetry.update();
+            double leftPower;
+            double rightPower;
+
+            double drive = -gamepad1.left_stick_y;
+            double turn  =  gamepad1.right_stick_x;
+            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.update();
         }
     }
 }
