@@ -49,8 +49,8 @@ public class AlexAuto extends LinearOpMode {
 // run until the end of the match (driver presses STOP)
 
         while (opModeIsActive()) {
-            double leftPower = 0.5;
-            double rightPower = 0.5;
+            double leftPower = 0.1;
+            double rightPower = 0.1;
 
 
             frontLeft.setPower(leftPower);
