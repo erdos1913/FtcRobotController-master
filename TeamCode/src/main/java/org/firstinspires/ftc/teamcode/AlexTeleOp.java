@@ -13,10 +13,10 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp
 public class AlexTeleOp extends LinearOpMode {
 
-    private Gyroscope imu;
-    private DigitalChannel digitalTouch;
-    private DistanceSensor sensorColorRange;
-    private Servo servoTest;
+    //private Gyroscope imu;
+    //private DigitalChannel digitalTouch;
+    //private DistanceSensor sensorColorRange;
+    //private Servo servoTest;
 
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontLeft = null;
@@ -27,15 +27,15 @@ public class AlexTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        imu = hardwareMap.get(Gyroscope.class, "imu");
+       // imu = hardwareMap.get(Gyroscope.class, "imu");
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
 
-        digitalTouch = hardwareMap.get(DigitalChannel.class, "digitalTouch");
-        sensorColorRange = hardwareMap.get(DistanceSensor.class, "sensorColorRange");
-        servoTest = hardwareMap.get(Servo.class, "servoTest");
+      //  digitalTouch = hardwareMap.get(DigitalChannel.class, "digitalTouch");
+       // sensorColorRange = hardwareMap.get(DistanceSensor.class, "sensorColorRange");
+       // servoTest = hardwareMap.get(Servo.class, "servoTest");
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
