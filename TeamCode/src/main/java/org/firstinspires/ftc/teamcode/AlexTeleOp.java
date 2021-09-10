@@ -53,7 +53,7 @@ public class AlexTeleOp extends LinearOpMode {
             double drive = -gamepad1.left_stick_y;
             double turn  =  gamepad1.right_stick_x;
             leftPower = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower  = Range.clip(drive - turn, -1.0, 1.0) ;
+            rightPower = Range.clip(drive - turn, -1.0, 1.0) ;
 
             frontLeft.setPower(leftPower);
             frontRight.setPower(rightPower);
