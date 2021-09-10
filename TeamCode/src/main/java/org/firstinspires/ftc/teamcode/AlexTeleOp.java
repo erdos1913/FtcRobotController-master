@@ -52,8 +52,13 @@ public class AlexTeleOp extends LinearOpMode {
 
             double drive = -gamepad1.left_stick_y;
             double turn  =  gamepad1.right_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            leftPower = Range.clip(drive + turn, -1.0, 1.0) ;
+            rightPower  = Range.clip(drive - turn, -1.0, 1.0) ;
+
+            frontLeft.setPower(leftPower);
+            frontRight.setPower(rightPower);
+            backRight.setPower(rightPower);
+            backLeft.setPower(leftPower);
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
