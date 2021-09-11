@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 public class TestAuto extends LinearOpMode {
-    // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontLeft = null;
     private DcMotor backLeft = null;
@@ -23,8 +22,6 @@ public class TestAuto extends LinearOpMode {
     private DcMotor arm = null;
     private DcMotor intake = null;
     private DcMotor lift = null;
-    static void Launch_Ring(Servo servo){
-    }
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -54,12 +51,14 @@ public class TestAuto extends LinearOpMode {
                 functions.initialize(lift, trigger, flywheel);
             }
             else if (gamepad1.a) {
+                //Ready the trigger
                 trigger.setPosition(1);
             }
             else if (gamepad1.b) {
                 functions.launch_ring(trigger, lift, flywheel, 1);
             }
             else if (gamepad1.y) {
+                //Start the flywheel
                 flywheel.setPower(1);
             }
             telemetry.addData("Status", "Run Time: " + runtime.toString());
