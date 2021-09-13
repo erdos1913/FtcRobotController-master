@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 @Autonomous
-public class AlexAuto extends LinearOpMode {
+public class AlexAutoTime extends LinearOpMode {
 
     //private Gyroscope imu;
     //private DigitalChannel digitalTouch;
@@ -49,9 +49,13 @@ public class AlexAuto extends LinearOpMode {
 // run until the end of the match (driver presses STOP)
 
         while (opModeIsActive()) {
-            double leftPower = 0.1;
-            double rightPower = 0.1;
+            double leftPower = 0.0;
+            double rightPower = 0.0;
 
+            if(getRuntime() < 1000) {
+                leftPower = 0.5;
+                rightPower = 0.1;
+            }
 
             frontLeft.setPower(leftPower);
             frontRight.setPower(rightPower);
