@@ -53,7 +53,6 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @Autonomous()
-@Disabled
 public class KareemAuto extends LinearOpMode {
 
     // Declare OpMode members.
