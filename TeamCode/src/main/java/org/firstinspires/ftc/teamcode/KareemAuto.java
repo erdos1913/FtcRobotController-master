@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -36,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -57,7 +59,8 @@ public class KareemAuto extends OpMode {
     private DcMotor arm = null;
     private DcMotor intake = null;
     private DcMotor lift = null;
-    private int count = 0;
+    private boolean ready = false;
+    private Gyroscope gyro = null;
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
@@ -76,13 +79,21 @@ public class KareemAuto extends OpMode {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
         functions.initialize(lift, trigger, flywheel);
+        backLeft.setTargetPosition(-200);
+        backRight.setTargetPosition(-200);
+        frontLeft.setTargetPosition(-200);
+        frontRight.setTargetPosition(-200);
+        backLeft.setPower(1);
+        backRight.setPower(1);
+        frontLeft.setPower(1);
+        frontRight.setPower(1);
+        ready = true;
     }
 
     @Override
     public void loop() {
-        count = count + 1;
         runtime.reset();
-        if (count == 1)
+        if (ready)
         {
             functions.launch_ring(trigger, lift, flywheel, 0.8);
         }
