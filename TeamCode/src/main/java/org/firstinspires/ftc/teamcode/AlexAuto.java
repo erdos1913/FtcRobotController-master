@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp
-public class AlexTeleOp extends LinearOpMode {
+@Autonomous
+public class AlexAuto extends LinearOpMode {
 
     //private Gyroscope imu;
     //private DigitalChannel digitalTouch;
@@ -27,15 +27,17 @@ public class AlexTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-       // imu = hardwareMap.get(Gyroscope.class, "imu");
+        // imu = hardwareMap.get(Gyroscope.class, "imu");
+
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
 
-      //  digitalTouch = hardwareMap.get(DigitalChannel.class, "digitalTouch");
-       // sensorColorRange = hardwareMap.get(DistanceSensor.class, "sensorColorRange");
-       // servoTest = hardwareMap.get(Servo.class, "servoTest");
+        //  digitalTouch = hardwareMap.get(DigitalChannel.class, "digitalTouch");
+        // sensorColorRange = hardwareMap.get(DistanceSensor.class, "sensorColorRange");
+        // servoTest = hardwareMap.get(Servo.class, "servoTest");
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -47,13 +49,9 @@ public class AlexTeleOp extends LinearOpMode {
 // run until the end of the match (driver presses STOP)
 
         while (opModeIsActive()) {
-            double leftPower;
-            double rightPower;
+            double leftPower = 0.1;
+            double rightPower = 0.1;
 
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
-            leftPower = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower = Range.clip(drive - turn, -1.0, 1.0) ;
 
             frontLeft.setPower(leftPower);
             frontRight.setPower(rightPower);
