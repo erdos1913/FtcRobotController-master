@@ -60,6 +60,7 @@ public class EhrensTeleop extends OpMode
     private DcMotor backLeft = null;
     private DcMotor frontRight = null;
     private DcMotor backRight = null;
+    private DcMotor flywheel = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -81,6 +82,7 @@ public class EhrensTeleop extends OpMode
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
