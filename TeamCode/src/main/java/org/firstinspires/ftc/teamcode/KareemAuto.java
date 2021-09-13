@@ -29,18 +29,22 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gyroscope;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
 @Autonomous()
-public class KareemAuto extends LinearOpMode {
+public class KareemAuto extends OpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -48,9 +52,17 @@ public class KareemAuto extends LinearOpMode {
     private DcMotor backLeft = null;
     private DcMotor frontRight = null;
     private DcMotor backRight = null;
-
+    private Servo launch = null;
+    private Servo grabber = null;
+    private Servo trigger = null;
+    private DcMotor flywheel = null;
+    private DcMotor arm = null;
+    private DcMotor intake = null;
+    private DcMotor lift = null;
+    private boolean ready = false;
+    private Gyroscope gyro = null;
     @Override
-    public void runOpMode() {
+    public void init() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -58,28 +70,34 @@ public class KareemAuto extends LinearOpMode {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         frontRight  = hardwareMap.get(DcMotor.class, "frontRight");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
+        lift = hardwareMap.get(DcMotor.class, "lift");
+        trigger = hardwareMap.get(Servo.class, "trigger");
+        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
 
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        functions.initialize(lift, trigger, flywheel);
+        backLeft.setTargetPosition(-200);
+        backRight.setTargetPosition(-200);
+        frontLeft.setTargetPosition(-200);
+        frontRight.setTargetPosition(-200);
+        backLeft.setPower(1);
+        backRight.setPower(1);
+        frontLeft.setPower(1);
+        frontRight.setPower(1);
+        ready = true;
+    }
 
-        waitForStart();
+    @Override
+    public void loop() {
         runtime.reset();
-
-        while (opModeIsActive()) {
-
-            double leftPower = 0.5;
-            double rightPower = 0.5;
-
-            frontLeft.setPower(leftPower);
-            backLeft.setPower(leftPower);
-            frontRight.setPower(rightPower);
-            backRight.setPower(rightPower);
-
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-            telemetry.update();
+        if (ready)
+        {
+            functions.launch_ring(trigger, lift, flywheel, 0.8);
         }
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.update();
     }
 }
