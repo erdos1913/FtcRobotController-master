@@ -13,7 +13,7 @@ public class functions {
     static void launch_ring(Servo trigger, DcMotor lift, DcMotor flywheel, double power)
     {
         trigger.setPosition(1);
-        lift.setPower(-0.7);
+        lift.setPower(-0.6);
         flywheel.setPower(power);
     }
 }
