@@ -14,11 +14,15 @@ public class functions {
         }
         lift.setPower(0);
     }
-    static void launch_ring(Servo trigger, DcMotor lift, DcMotor flywheel, double power)
+    static void launch_ring(Servo trigger, DcMotor lift, DcMotor flywheel, double power, TouchSensor top)
     {
         trigger.setPosition(1);
-        lift.setPower(-0.6);
         flywheel.setPower(power);
+        while (!top.isPressed())
+        {
+            lift.setPower(-0.6);
+        }
+        lift.setPower(0);
     }
     static void move(int position, DcMotor backLeft, DcMotor backRight, DcMotor frontLeft, DcMotor frontRight){
         frontLeft.setTargetPosition(position);

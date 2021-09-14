@@ -30,6 +30,7 @@ public class TestAuto extends LinearOpMode {
         DcMotor arm = null;
         DcMotor intake = null;
         DcMotor lift = null;
+        TouchSensor topTouch = null;
         TouchSensor bottomTouch = null;
         Gyroscope imu = null;
         telemetry.addData("Status", "Initialized");
@@ -47,6 +48,7 @@ public class TestAuto extends LinearOpMode {
         grabber = hardwareMap.get(Servo.class, "grabber");
         trigger = hardwareMap.get(Servo.class, "trigger");
         bottomTouch = hardwareMap.get(TouchSensor.class, "sensorBottom");
+        topTouch = hardwareMap.get(TouchSensor.class, "sensorTop");
         imu = hardwareMap.get(Gyroscope.class, "imu");
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -71,7 +73,7 @@ public class TestAuto extends LinearOpMode {
                 trigger.setPosition(1);
             }
             else if (gamepad1.b) {
-                functions.launch_ring(trigger, lift, flywheel, 1);
+                functions.launch_ring(trigger, lift, flywheel, 1, topTouch);
             }
             else if (gamepad1.y) {
                 //Start the flywheel
