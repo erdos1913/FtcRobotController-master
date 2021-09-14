@@ -84,6 +84,9 @@ public class TestAuto extends LinearOpMode {
             telemetry.addData("X", imu.getPosition().x);
             telemetry.addData("Y", imu.getPosition().y);
             telemetry.addData("Z", imu.getPosition().z);
+            telemetry.addData("X Velocity", imu.getVelocity().xVeloc);
+            telemetry.addData("Y Velocity", imu.getVelocity().yVeloc);
+            telemetry.addData("Z Velocity", imu.getVelocity().zVeloc);
             telemetry.update();
         }
     }
