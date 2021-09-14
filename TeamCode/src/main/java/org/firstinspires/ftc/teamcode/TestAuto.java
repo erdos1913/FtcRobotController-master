@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -32,7 +33,7 @@ public class TestAuto extends LinearOpMode {
         DcMotor lift = null;
         TouchSensor topTouch = null;
         TouchSensor bottomTouch = null;
-        Gyroscope imu = null;
+        BNO055IMU imu = null;
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -49,7 +50,7 @@ public class TestAuto extends LinearOpMode {
         trigger = hardwareMap.get(Servo.class, "trigger");
         bottomTouch = hardwareMap.get(TouchSensor.class, "sensorBottom");
         topTouch = hardwareMap.get(TouchSensor.class, "sensorTop");
-        imu = hardwareMap.get(Gyroscope.class, "imu");
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -80,7 +81,12 @@ public class TestAuto extends LinearOpMode {
                 flywheel.setPower(1);
             }
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Velocity", imu.getAngularVelocity(AngleUnit.RADIANS).toString());
+            telemetry.addData("X", imu.getPosition().x);
+            telemetry.addData("Y", imu.getPosition().y);
+            telemetry.addData("Z", imu.getPosition().z);
+            telemetry.addData("X Velocity", imu.getVelocity().xVeloc);
+            telemetry.addData("Y Velocity", imu.getVelocity().yVeloc);
+            telemetry.addData("Z Velocity", imu.getVelocity().zVeloc);
             telemetry.update();
         }
     }
