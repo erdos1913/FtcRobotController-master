@@ -63,6 +63,7 @@ public class KareemAuto extends OpMode {
     private boolean ready = false;
     private Gyroscope gyro = null;
     private TouchSensor bottomTouch = null;
+    private TouchSensor topTouch = null;
     private int count = 0;
     private int count2 = 0;
     @Override
@@ -78,6 +79,7 @@ public class KareemAuto extends OpMode {
         trigger = hardwareMap.get(Servo.class, "trigger");
         flywheel = hardwareMap.get(DcMotor.class, "flywheel");
         bottomTouch = hardwareMap.get(TouchSensor.class, "sensorBottom");
+        topTouch = hardwareMap.get(TouchSensor.class, "sensorTop");
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -118,7 +120,7 @@ public class KareemAuto extends OpMode {
         runtime.reset();
         if (count == 1)
         {
-            functions.launch_ring(trigger, lift, flywheel, 0.8);
+            functions.launch_ring(trigger, lift, flywheel, 0.8, topTouch);
         }
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.update();
