@@ -71,7 +71,7 @@ import org.firstinspires.ftc.teamcode.HardwareRobot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Drive By Gyro", group="Pushbot")
+@Autonomous(name="Alex Gr", group="Pushbot")
 public class AlexAutoGyro extends LinearOpMode {
 
     /* Declare OpMode members. */
