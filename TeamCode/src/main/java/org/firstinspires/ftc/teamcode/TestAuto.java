@@ -5,27 +5,31 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 public class TestAuto extends LinearOpMode {
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor frontLeft = null;
-    private DcMotor backLeft = null;
-    private DcMotor frontRight = null;
-    private DcMotor backRight = null;
-    private Servo launch = null;
-    private Servo grabber = null;
-    private Servo trigger = null;
-    private DcMotor flywheel = null;
-    private DcMotor arm = null;
-    private DcMotor intake = null;
-    private DcMotor lift = null;
     @Override
 
 
     public void runOpMode() {
+        ElapsedTime runtime = new ElapsedTime();
+        DcMotor frontLeft = null;
+        DcMotor backLeft = null;
+        DcMotor frontRight = null;
+        DcMotor backRight = null;
+        Servo launch = null;
+        Servo grabber = null;
+        Servo trigger = null;
+        DcMotor flywheel = null;
+        DcMotor arm = null;
+        DcMotor intake = null;
+        DcMotor lift = null;
+        TouchSensor bottomTouch = null;
+        Gyroscope imu = null;
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -40,17 +44,26 @@ public class TestAuto extends LinearOpMode {
         launch = hardwareMap.get(Servo.class, "launch");
         grabber = hardwareMap.get(Servo.class, "grabber");
         trigger = hardwareMap.get(Servo.class, "trigger");
+        bottomTouch = hardwareMap.get(TouchSensor.class, "sensorBottom");
+        imu = hardwareMap.get(Gyroscope.class, "imu");
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        telemetry.addData("Velocity", imu.getAngularVelocityAxes());
         waitForStart();
         runtime.reset();
 
         while (opModeIsActive()) {
+            if (!bottomTouch.isPressed())
+            {
+                telemetry.addData("Pressed", "False");
+            }
+            else {
+                telemetry.addData("Pressed", "True");
+            }
             if (gamepad1.x){
-                functions.initialize(lift, trigger, flywheel);
+                functions.initialize(lift, trigger, flywheel, bottomTouch);
             }
             else if (gamepad1.a) {
                 //Ready the trigger

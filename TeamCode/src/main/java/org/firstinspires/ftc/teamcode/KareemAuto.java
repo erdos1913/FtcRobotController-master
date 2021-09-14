@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -61,6 +62,9 @@ public class KareemAuto extends OpMode {
     private DcMotor lift = null;
     private boolean ready = false;
     private Gyroscope gyro = null;
+    private TouchSensor bottomTouch = null;
+    private int count = 0;
+    private int count2 = 0;
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
@@ -73,27 +77,46 @@ public class KareemAuto extends OpMode {
         lift = hardwareMap.get(DcMotor.class, "lift");
         trigger = hardwareMap.get(Servo.class, "trigger");
         flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+        bottomTouch = hardwareMap.get(TouchSensor.class, "sensorBottom");
 
-        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        functions.initialize(lift, trigger, flywheel);
-        backLeft.setTargetPosition(-200);
-        backRight.setTargetPosition(-200);
-        frontLeft.setTargetPosition(-200);
-        frontRight.setTargetPosition(-200);
+        backLeft.setTargetPosition(3000);
+        backRight.setTargetPosition(3000);
+        frontLeft.setTargetPosition(3000);
+        frontRight.setTargetPosition(3000);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backLeft.setPower(1);
         backRight.setPower(1);
         frontLeft.setPower(1);
         frontRight.setPower(1);
-        ready = true;
+        while(backRight.isBusy())
+        {
+            count2 ++;
+        }
+        frontLeft.setTargetPosition(-3500);
+        frontRight.setTargetPosition(-3500);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontLeft.setPower(1);
+        frontRight.setPower(1);
+        while(backRight.isBusy())
+        {
+            count2 ++;
+        }
+        functions.initialize(lift, trigger, flywheel, bottomTouch);
     }
 
     @Override
     public void loop() {
+        count ++;
         runtime.reset();
-        if (ready)
+        if (count == 1)
         {
             functions.launch_ring(trigger, lift, flywheel, 0.8);
         }
