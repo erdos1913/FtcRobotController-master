@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
 @TeleOp
 public class TestAuto extends LinearOpMode {
     @Override
@@ -76,7 +78,7 @@ public class TestAuto extends LinearOpMode {
                 flywheel.setPower(1);
             }
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Velocity", imu.getAngularVelocityAxes().toString());
+            telemetry.addData("Velocity", imu.getAngularVelocity(AngleUnit.RADIANS).toString());
             telemetry.update();
         }
     }
