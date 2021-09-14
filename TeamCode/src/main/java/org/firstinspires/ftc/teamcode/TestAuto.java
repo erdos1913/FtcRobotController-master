@@ -80,7 +80,7 @@ public class TestAuto extends LinearOpMode {
                 flywheel.setPower(1);
             }
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Velocity", imu.getAngularVelocity(AngleUnit.RADIANS).toString());
+            telemetry.addData("Velocity", imu.getAngularVelocity(AngleUnit.RADIANS));
             telemetry.update();
         }
     }
