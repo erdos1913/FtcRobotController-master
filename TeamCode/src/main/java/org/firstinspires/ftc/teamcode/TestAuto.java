@@ -51,6 +51,8 @@ public class TestAuto extends LinearOpMode {
         bottomTouch = hardwareMap.get(TouchSensor.class, "sensorBottom");
         topTouch = hardwareMap.get(TouchSensor.class, "sensorTop");
         imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        imu.initialize(parameters);
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
