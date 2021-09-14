@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public class functions {
     static void initialize(DcMotor lift, Servo trigger, DcMotor flywheel, TouchSensor bottom) {
-        trigger.setPosition(0);
         flywheel.setPower(0);
         while (!bottom.isPressed())
         {
