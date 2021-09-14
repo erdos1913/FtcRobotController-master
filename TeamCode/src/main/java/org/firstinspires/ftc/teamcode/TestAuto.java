@@ -50,7 +50,6 @@ public class TestAuto extends LinearOpMode {
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        telemetry.addData("Velocity", imu.getAngularVelocityAxes());
         waitForStart();
         runtime.reset();
 
@@ -77,6 +76,7 @@ public class TestAuto extends LinearOpMode {
                 flywheel.setPower(1);
             }
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Velocity", imu.getAngularVelocityAxes().toString());
             telemetry.update();
         }
     }
