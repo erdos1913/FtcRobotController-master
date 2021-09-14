@@ -24,14 +24,4 @@ public class functions {
         }
         lift.setPower(0);
     }
-    static void move(int position, DcMotor backLeft, DcMotor backRight, DcMotor frontLeft, DcMotor frontRight){
-        frontLeft.setTargetPosition(position);
-        frontRight.setTargetPosition(position);
-        backLeft.setTargetPosition(position - 3);
-        backRight.setTargetPosition(position - 3);
-        frontLeft.setPower(1);
-        frontRight.setPower(1);
-        backLeft.setPower(1);
-        backRight.setPower(1);
-    }
 }
