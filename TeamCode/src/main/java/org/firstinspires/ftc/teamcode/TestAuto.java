@@ -50,8 +50,11 @@ public class TestAuto extends LinearOpMode {
         trigger = hardwareMap.get(Servo.class, "trigger");
         bottomTouch = hardwareMap.get(TouchSensor.class, "sensorBottom");
         topTouch = hardwareMap.get(TouchSensor.class, "sensorTop");
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu = hardwareMap.get(BNO055IMU.class, "imu 1");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         imu.initialize(parameters);
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -83,12 +86,7 @@ public class TestAuto extends LinearOpMode {
                 flywheel.setPower(1);
             }
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("X", imu.getPosition().x);
-            telemetry.addData("Y", imu.getPosition().y);
-            telemetry.addData("Z", imu.getPosition().z);
-            telemetry.addData("X Velocity", imu.getVelocity().xVeloc);
-            telemetry.addData("Y Velocity", imu.getVelocity().yVeloc);
-            telemetry.addData("Z Velocity", imu.getVelocity().zVeloc);
+            telemetry.addData("X", imu.getAngularOrientation().toString());
             telemetry.update();
         }
     }
