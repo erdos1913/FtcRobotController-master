@@ -114,9 +114,9 @@ public class AlexAutoEncoder extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         encoderDrive(DRIVE_SPEED,  -12,  -12, 5.0);  // S1: Forward 24 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   -12, 12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         encoderDrive(DRIVE_SPEED, -12, -12, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-        encoderDrive(TURN_SPEED, 12, -12, 4.0);
+        encoderDrive(TURN_SPEED, -12, 12, 4.0);
 //        Functions.initialize(robot.lift, robot.trigger, robot.flywheel, robot.bottom);
 //        Functions.launch_ring(robot.trigger, robot.lift, robot.flywheel, 1, robot.top);
 //        robot.flywheel.setPower(0);
