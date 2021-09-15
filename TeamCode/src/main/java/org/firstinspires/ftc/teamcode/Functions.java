@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-public class functions {
+public class Functions {
     static void initialize(DcMotor lift, Servo trigger, DcMotor flywheel, TouchSensor bottom) {
         flywheel.setPower(0);
         trigger.setPosition(0.8);

@@ -1,17 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @TeleOp
 public class TestAuto extends LinearOpMode {
@@ -69,14 +65,14 @@ public class TestAuto extends LinearOpMode {
                 telemetry.addData("Pressed", "True");
             }
             if (gamepad1.x){
-                functions.initialize(lift, trigger, flywheel, bottomTouch);
+                Functions.initialize(lift, trigger, flywheel, bottomTouch);
             }
             else if (gamepad1.a) {
                 //Ready the trigger
                 trigger.setPosition(1);
             }
             else if (gamepad1.b) {
-                functions.launch_ring(trigger, lift, flywheel, 1, topTouch);
+                Functions.launch_ring(trigger, lift, flywheel, 1, topTouch);
             }
             else if (gamepad1.y) {
                 //Start the flywheel
