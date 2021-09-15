@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -57,6 +58,12 @@ public class HardwareRobot
     public DcMotor  frontRight  = null;
     public DcMotor  backLeft    = null;
     public DcMotor  backRight   = null;
+    public DcMotor  flywheel    = null;
+    public DcMotor  lift        = null;
+    public Servo    trigger     = null;
+    public TouchSensor bottom   = null;
+    public TouchSensor top      = null;
+
 //    public DcMotor  leftArm     = null;
 //    public Servo    leftClaw    = null;
 //    public Servo    rightClaw   = null;
@@ -84,6 +91,12 @@ public class HardwareRobot
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
+        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+        lift = hardwareMap.get(DcMotor.class, "lift");
+        trigger = hardwareMap.get(Servo.class, "trigger");
+        bottom = hardwareMap.get(TouchSensor.class, "sensorBottom");
+        top = hardwareMap.get(TouchSensor.class, "sensorTop");
+
 
 //        leftArm    = hwMap.get(DcMotor.class, "left_arm");
 
@@ -91,12 +104,14 @@ public class HardwareRobot
         frontRight.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.REVERSE);
+        flywheel.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
+        flywheel.setPower(0);
 
         //leftArm.setPower(0);
 
@@ -106,6 +121,7 @@ public class HardwareRobot
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
