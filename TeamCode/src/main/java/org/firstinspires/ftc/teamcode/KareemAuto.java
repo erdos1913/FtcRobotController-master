@@ -29,19 +29,14 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 
 @Autonomous()
@@ -111,16 +106,16 @@ public class KareemAuto extends OpMode {
         {
             count2 ++;
         }
-        functions.initialize(lift, trigger, flywheel, bottomTouch);
+        Functions.initialize(lift, trigger, flywheel, bottomTouch);
     }
 
     @Override
     public void loop() {
-        count ++;
+        count = count+1;
         runtime.reset();
         if (count == 1)
         {
-            functions.launch_ring(trigger, lift, flywheel, 0.8, topTouch);
+            Functions.launch_ring(trigger, lift, flywheel, 0.8, topTouch);
         }
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.update();

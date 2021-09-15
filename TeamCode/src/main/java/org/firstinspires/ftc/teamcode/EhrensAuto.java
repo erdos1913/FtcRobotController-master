@@ -110,37 +110,28 @@ public class EhrensAuto extends OpMode
         telemetry.addData("Status", "Initialized");
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
     @Override
     public void init_loop() {
     }
 
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
     @Override
     public void start() {
         runtime.reset();
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
     @Override
     public void loop() {
         angle = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
         double leftPower;
         double rightPower;
-        if (Math.abs(180-angle)>=15) {
-            leftPower = Range.clip(1, -1.0, 1.0);
-            rightPower = Range.clip(-1, -1.0, 1.0);
+        if (Math.abs(180-angle)>=5&&counter==0) {
+            leftPower = Range.clip(1*((180-angle)/180.0), -1.0, 1.0);
+            rightPower = Range.clip(-1*((180-angle)/180.0), -1.0, 1.0);
             frontLeft.setPower(leftPower);
             backLeft.setPower(leftPower);
             frontRight.setPower(rightPower);
             backRight.setPower(rightPower);
-        } else if (counter==0){
+        } else {
             leftPower = Range.clip(0, -1.0, 1.0);
             rightPower = Range.clip(0, -1.0, 1.0);
             frontLeft.setPower(leftPower);
@@ -150,12 +141,9 @@ public class EhrensAuto extends OpMode
             counter++;
         }
 
-        flywheel.setPower(0.8);
-
-        // Show the elapsed game time and wheel power.
-        telemetry.addData("First Angle: ",imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle);
-        telemetry.addData("Second Angle: ",imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).secondAngle);
-        telemetry.addData("Third Angle: ",imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
+        // Show the elapsed game time and wheel power.;
+        telemetry.addData("Z: ", angle);
+        telemetry.addData("Turn Power: ",((180-angle)/180.0));
 
     }
 
