@@ -117,8 +117,9 @@ public class AlexAutoEncoder extends LinearOpMode {
         //encoderDrive(TURN_SPEED,   -12, 12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -12, -12, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
         //encoderDrive(TURN_SPEED, 12, -12, 4.0);
+        robot.flywheel.setPower(.5);
         Functions.initialize(robot.lift, robot.trigger, robot.flywheel, robot.bottom);
-        Functions.launch_ring(robot.trigger, robot.lift, robot.flywheel, 0.8, robot.top);
+        Functions.launch_ring(robot.trigger, robot.lift, robot.flywheel, 1, robot.top);
         robot.flywheel.setPower(0);
 
 //        robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
