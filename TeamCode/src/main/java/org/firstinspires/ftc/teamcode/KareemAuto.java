@@ -45,6 +45,8 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 
 @Autonomous()
@@ -84,12 +86,15 @@ public class KareemAuto extends OpMode {
         topTouch = hardwareMap.get(TouchSensor.class, "sensorTop");
         colorBottom = hardwareMap.get(ColorSensor.class, "colorBottom");
         colorBottom.enableLed(false);
-//        imu = hardwareMap.get(BNO055IMU.class, "imu");
-//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-//        parameters.mode = BNO055IMU.SensorMode.IMU;
-//        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-//        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-//        imu.initialize(parameters);
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        parameters.calibrationDataFile = "IMUCalibration.json";
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        imu.initialize(parameters);
+
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
     @Override
     public void loop() {
@@ -113,6 +118,7 @@ public class KareemAuto extends OpMode {
         telemetry.addData("Red", colorBottom.red());
         telemetry.addData("Blue", colorBottom.blue());
         telemetry.addData("Green", colorBottom.green());
+        telemetry.addData("Position", imu.getPosition());
         telemetry.update();
     }
 }
