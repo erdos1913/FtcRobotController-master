@@ -129,6 +129,12 @@ public class AlexAutoEncoder extends LinearOpMode {
             if(gamepad1.b) {
                 encoderDrive(DRIVE_SPEED, 24, 24, 5.0);
             }
+            if(gamepad1.right_bumper) {
+                robot.flywheel.setPower(0.8);
+                Functions.initialize(robot.lift, robot.trigger, robot.flywheel, robot.bottom);
+                Functions.launch_ring(robot.trigger, robot.lift, robot.flywheel, 0.8, robot.top);
+                robot.flywheel.setPower(0);
+            }
         }
 
           // S1: Forward 24 Inches with 5 Sec timeout
