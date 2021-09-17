@@ -45,31 +45,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
-/**
- * This file contains an example of an iterative (Non-Linear) "OpMode".
- * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
- * The names of OpModes appear on the menu of the FTC Driver Station.
- * When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all iterative OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
 
 @Autonomous(name="Ehren's Auto", group="Iterative Opmode")
-public class EhrensAuto extends OpMode
-{
+public class EhrensAuto extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor frontLeft = null;
-    private DcMotor backLeft = null;
-    private DcMotor frontRight = null;
-    private DcMotor backRight = null;
-    private DcMotor flywheel = null;
+    static DcMotor frontLeft = null;
+    static DcMotor backLeft = null;
+    static DcMotor frontRight = null;
+    static DcMotor backRight = null;
+    private static DcMotor flywheel = null;
     int counter = 0;
+    double startAngle = 0;
     double angle;
     BNO055IMU imu;
 
@@ -110,6 +97,13 @@ public class EhrensAuto extends OpMode
         telemetry.addData("Status", "Initialized");
     }
 
+    public static void setDrivetrainMotors(Double leftPower, Double rightPower){
+        frontLeft.setPower(leftPower);
+        backLeft.setPower(leftPower);
+        frontRight.setPower(rightPower);
+        backRight.setPower(rightPower);
+    }
+
     @Override
     public void init_loop() {
     }
@@ -117,34 +111,12 @@ public class EhrensAuto extends OpMode
     @Override
     public void start() {
         runtime.reset();
+        startAngle=imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+        Drivetrain.rotate(180,imu);
     }
 
     @Override
     public void loop() {
-        angle = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-        double leftPower;
-        double rightPower;
-        if (Math.abs(180-angle)>=5&&counter==0) {
-            leftPower = Range.clip(1*((180-angle)/180.0), -1.0, 1.0);
-            rightPower = Range.clip(-1*((180-angle)/180.0), -1.0, 1.0);
-            frontLeft.setPower(leftPower);
-            backLeft.setPower(leftPower);
-            frontRight.setPower(rightPower);
-            backRight.setPower(rightPower);
-        } else {
-            leftPower = Range.clip(0, -1.0, 1.0);
-            rightPower = Range.clip(0, -1.0, 1.0);
-            frontLeft.setPower(leftPower);
-            backLeft.setPower(leftPower);
-            frontRight.setPower(rightPower);
-            backRight.setPower(rightPower);
-            counter++;
-        }
-
-        // Show the elapsed game time and wheel power.;
-        telemetry.addData("Z: ", angle);
-        telemetry.addData("Turn Power: ",((180-angle)/180.0));
-
     }
 
     /*
