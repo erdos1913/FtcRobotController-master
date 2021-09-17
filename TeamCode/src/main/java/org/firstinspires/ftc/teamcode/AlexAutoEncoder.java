@@ -236,20 +236,6 @@ public class AlexAutoEncoder extends LinearOpMode {
         }
     }
 
-//    public void initialize() {
-//        robot.flywheel.setPower(0);
-//        robot.trigger.setPosition(0.8);
-//        while (!robot.bottom.isPressed()) {
-//            robot.lift.setPower(1);
-//        }
-//        robot.lift.setPower(0);
-//    }
 //
-//    public void shoot() {
-//        robot.trigger.setPosition(1);
-//        robot.flywheel.setPower(0.8);
-//
-//
-//    }
 
 }
