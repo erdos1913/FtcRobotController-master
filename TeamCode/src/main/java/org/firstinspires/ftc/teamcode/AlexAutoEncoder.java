@@ -80,6 +80,7 @@ public class AlexAutoEncoder extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        waitForStart();
         while (opModeIsActive()) {
             if(gamepad1.x) {
                 COUNTS_PER_MOTOR_REV += 10;
