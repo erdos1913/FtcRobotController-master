@@ -79,7 +79,7 @@ public class AlexAutoEncoder extends LinearOpMode {
     static final double     TURN_SPEED              = 0.5;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
 
         /*
          * Initialize the drive system variables.
@@ -130,8 +130,9 @@ public class AlexAutoEncoder extends LinearOpMode {
                 encoderDrive(DRIVE_SPEED, 24, 24, 5.0);
             }
             if(gamepad1.right_bumper) {
-                robot.flywheel.setPower(0.8);
                 Functions.initialize(robot.lift, robot.trigger, robot.flywheel, robot.bottom);
+                robot.flywheel.setPower(0.8);
+                robot.wait(1000);
                 Functions.launch_ring(robot.trigger, robot.lift, robot.flywheel, 0.8, robot.top);
                 robot.flywheel.setPower(0);
             }
