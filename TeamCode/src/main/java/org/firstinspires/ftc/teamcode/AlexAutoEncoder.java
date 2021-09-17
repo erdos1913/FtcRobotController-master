@@ -84,12 +84,18 @@ public class AlexAutoEncoder extends LinearOpMode {
         while (opModeIsActive()) {
             if(gamepad1.x) {
                 COUNTS_PER_MOTOR_REV += 10;
+                telemetry.addData("CPMR", COUNTS_PER_MOTOR_REV);
+                telemetry.update();
             }
             if(gamepad1.y) {
                 COUNTS_PER_MOTOR_REV -= 10;
+                telemetry.addData("CPMR", COUNTS_PER_MOTOR_REV);
+                telemetry.update();
             }
             if(gamepad1.a) {
                 runRobot();
+                telemetry.addData("CPMR", COUNTS_PER_MOTOR_REV);
+                telemetry.update();
             }
         }
     }
@@ -144,6 +150,7 @@ public class AlexAutoEncoder extends LinearOpMode {
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+
     }
 
     /*
