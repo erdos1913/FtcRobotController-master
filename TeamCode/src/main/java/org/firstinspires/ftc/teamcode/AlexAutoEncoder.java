@@ -80,28 +80,6 @@ public class AlexAutoEncoder extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        waitForStart();
-        while (opModeIsActive()) {
-            if(gamepad1.x) {
-                COUNTS_PER_MOTOR_REV += 10;
-                telemetry.addData("CPMR", COUNTS_PER_MOTOR_REV);
-                telemetry.update();
-            }
-            if(gamepad1.y) {
-                COUNTS_PER_MOTOR_REV -= 10;
-                telemetry.addData("CPMR", COUNTS_PER_MOTOR_REV);
-                telemetry.update();
-            }
-            if(gamepad1.a) {
-                runRobot();
-                telemetry.addData("CPMR", COUNTS_PER_MOTOR_REV);
-                telemetry.update();
-            }
-        }
-    }
-
-
-    public void runRobot() {
 
         /*
          * Initialize the drive system variables.
@@ -136,7 +114,24 @@ public class AlexAutoEncoder extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  -24,  -24, 5.0);  // S1: Forward 24 Inches with 5 Sec timeout
+
+
+        while(opModeIsActive()) {
+            if(gamepad1.a) {
+                encoderDrive(DRIVE_SPEED,  -24,  -24, 5.0);
+            }
+            if(gamepad1.x) {
+                encoderDrive(TURN_SPEED, 12, -12, 4.0);
+            }
+            if(gamepad1.y) {
+                encoderDrive(TURN_SPEED, -12, 12, 4.0);
+            }
+            if(gamepad1.b) {
+                encoderDrive(DRIVE_SPEED, 24, 24, 5.0);
+            }
+        }
+
+          // S1: Forward 24 Inches with 5 Sec timeout
 //        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
 //        encoderDrive(DRIVE_SPEED, -12, -12, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 //        encoderDrive(TURN_SPEED, -12, 12, 4.0);
