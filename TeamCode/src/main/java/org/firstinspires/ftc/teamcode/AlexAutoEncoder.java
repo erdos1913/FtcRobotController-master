@@ -135,6 +135,7 @@ public class AlexAutoEncoder extends LinearOpMode {
             }
             if(gamepad1.left_bumper) {
                 Functions.initialize(robot.lift, robot.trigger, robot.flywheel, robot.bottom);
+                robot.flywheel.setPower(0.8);
             }
         }
 
