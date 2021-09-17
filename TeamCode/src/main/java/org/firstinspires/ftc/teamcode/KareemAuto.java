@@ -84,14 +84,13 @@ public class KareemAuto extends OpMode {
         topTouch = hardwareMap.get(TouchSensor.class, "sensorTop");
         colorBottom = hardwareMap.get(ColorSensor.class, "colorBottom");
         colorBottom.enableLed(false);
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.mode = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        imu.initialize(parameters);
+//        imu = hardwareMap.get(BNO055IMU.class, "imu");
+//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+//        parameters.mode = BNO055IMU.SensorMode.IMU;
+//        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+//        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+//        imu.initialize(parameters);
     }
-
     @Override
     public void loop() {
         runtime.reset();
