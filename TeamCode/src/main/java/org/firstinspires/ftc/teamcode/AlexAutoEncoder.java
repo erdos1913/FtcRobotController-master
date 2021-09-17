@@ -121,10 +121,10 @@ public class AlexAutoEncoder extends LinearOpMode {
                 encoderDrive(DRIVE_SPEED,  -24,  -24, 5.0);
             }
             if(gamepad1.x) {
-                encoderDrive(TURN_SPEED, 23, -23, 4.0); //90?
+                encoderDrive(TURN_SPEED, 12, -12, 4.0); //90?
             }
             if(gamepad1.y) {
-                encoderDrive(TURN_SPEED, -23, 23, 4.0); //90?
+                encoderDrive(TURN_SPEED, -12, 12, 4.0); //90?
             }
             if(gamepad1.b) {
                 encoderDrive(DRIVE_SPEED, 24, 24, 5.0);
