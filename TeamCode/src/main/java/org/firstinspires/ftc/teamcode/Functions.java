@@ -53,5 +53,27 @@ public class Functions {
         frontRight.setTargetPosition(newFrontRightTarget);
         backLeft.setTargetPosition(newBackLeftTarget);
         backRight.setTargetPosition(newBackRightTarget);
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        frontLeft.setPower(Math.abs(.6));
+        frontRight.setPower(Math.abs(.6));
+        backLeft.setPower(Math.abs(.6));
+        backRight.setPower(Math.abs(.6));
+
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+
+        // Turn off RUN_TO_POSITION
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }
