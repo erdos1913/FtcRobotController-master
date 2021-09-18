@@ -28,10 +28,11 @@
  */
 
 package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -64,28 +65,34 @@ public class KareemAuto extends OpMode {
     private DcMotor intake = null;
     private DcMotor lift = null;
     private boolean ready = false;
-    private boolean stage1 = true;
-    private boolean stage2 = false;
+    private int stage = 0;
     private BNO055IMU imu = null;
     private TouchSensor bottomTouch = null;
     private TouchSensor topTouch = null;
-    private ColorSensor colorBottom = null;
+    private RevColorSensorV3 colorBottom = null;
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
+        //motors
         frontLeft  = hardwareMap.get(DcMotor.class, "frontLeft");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         frontRight  = hardwareMap.get(DcMotor.class, "frontRight");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        //servos
         lift = hardwareMap.get(DcMotor.class, "lift");
         trigger = hardwareMap.get(Servo.class, "trigger");
         flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+        //sensors
         bottomTouch = hardwareMap.get(TouchSensor.class, "sensorBottom");
         topTouch = hardwareMap.get(TouchSensor.class, "sensorTop");
-        colorBottom = hardwareMap.get(ColorSensor.class, "colorBottom");
+        colorBottom = hardwareMap.get(RevColorSensorV3.class, "colorBottom");
         colorBottom.enableLed(false);
+//        imu
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.mode = BNO055IMU.SensorMode.IMU;
@@ -93,32 +100,53 @@ public class KareemAuto extends OpMode {
         parameters.calibrationDataFile = "IMUCalibration.json";
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         imu.initialize(parameters);
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 50);
+        Functions.initialize(lift, trigger, flywheel, bottomTouch);
 
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
     @Override
     public void loop() {
         runtime.reset();
-        if (stage1)
+        switch (stage)
         {
-            backLeft.setPower(1);
-            backRight.setPower(1);
-            frontRight.setPower(1);
-            frontLeft.setPower(1);
-            while (colorBottom.blue() == 255)
-            {
-                ;
-            }
-            backLeft.setPower(0);
-            backRight.setPower(0);
-            frontRight.setPower(0);
-            frontLeft.setPower(0);
+            case 1:
+                backLeft.setPower(1);
+                backRight.setPower(1);
+                frontRight.setPower(1);
+                frontLeft.setPower(1);
+                while (colorBottom.blue() == 255)
+                {
+                    ;
+                }
+                backLeft.setPower(0);
+                backRight.setPower(0);
+                frontRight.setPower(0);
+                frontLeft.setPower(0);
+                stage++;
+                break;
+            case 2:
+                Drivetrain.rotate(-90, imu);
+                stage++;
+                break;
+            case 3:
+                Functions.encoderDrive(1, 27, 27, frontRight, frontLeft, backLeft, backRight);
+                stage++;
+            case 4:
+                flywheel.setPower(1);
+                while (flywheel.getPower() != 1)
+                {
+                    ;
+                }
+                stage++;
+            case 5:
+                Functions.launch_ring(trigger, lift, flywheel, 1.0, topTouch);
+            default:
+                break;
         }
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Red", colorBottom.red());
         telemetry.addData("Blue", colorBottom.blue());
         telemetry.addData("Green", colorBottom.green());
-        telemetry.addData("Position", imu.getPosition());
+        telemetry.addData("Alpha", colorBottom.alpha());
         telemetry.update();
     }
 }
