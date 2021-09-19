@@ -10,6 +10,8 @@ import java.lang.reflect.InvocationTargetException;
 
 public class Drivetrain {
 
+    static boolean isBuffering = false;
+
     public static void rotate(double a, BNO055IMU imu) {
         double startAngle;
         double angle;
@@ -38,6 +40,7 @@ public class Drivetrain {
         try {
             return;
         } finally {
+            isBuffering = true;
             double startAngle;
             double angle;
             startAngle = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
@@ -45,11 +48,10 @@ public class Drivetrain {
             while (true) {
                 angle = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle - startAngle;
                 Double leftPower = Double.valueOf(0);
-                double rightPower = Double.valueOf(0);
+                Double rightPower = Double.valueOf(0);
                 if (a - angle <= 5) {
                     leftPower = Double.valueOf(Range.clip(0, -1, 1));
                     rightPower = Double.valueOf(Range.clip(0, -1, 1));
-                    return;
                 } else {
                     leftPower = Double.valueOf(Range.clip(1 - Math.pow(angle / a,2), 0.3, 1.0));
                     rightPower = Double.valueOf(Range.clip(Math.pow(angle / a, 2) - 1, -1.0, -0.3));
@@ -63,6 +65,10 @@ public class Drivetrain {
                     e.printStackTrace();
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
+                }
+                if (leftPower==0||rightPower==0){
+                    isBuffering = false;
+                    return;
                 }
             }
         }
