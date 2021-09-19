@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.broadcom.BroadcomColorSensor;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -37,6 +38,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gyroscope;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynchSimple;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -92,7 +94,7 @@ public class KareemAuto extends OpMode {
         topTouch = hardwareMap.get(TouchSensor.class, "sensorTop");
         colorBottom = hardwareMap.get(RevColorSensorV3.class, "colorBottom");
         colorBottom.enableLed(false);
-//        imu
+        //imu
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.mode = BNO055IMU.SensorMode.IMU;
@@ -114,7 +116,7 @@ public class KareemAuto extends OpMode {
                 backRight.setPower(1);
                 frontRight.setPower(1);
                 frontLeft.setPower(1);
-                while (colorBottom.blue() == 255)
+                while (colorBottom.blue() < 120)
                 {
                     ;
                 }
@@ -140,6 +142,10 @@ public class KareemAuto extends OpMode {
                 stage++;
             case 5:
                 Functions.launch_ring(trigger, lift, flywheel, 1.0, topTouch);
+                stage++;
+            case 6:
+                Functions.initialize(lift, trigger, flywheel, bottomTouch);
+                stage++;
             default:
                 break;
         }

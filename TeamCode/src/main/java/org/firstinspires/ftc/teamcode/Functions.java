@@ -9,9 +9,10 @@ public class Functions {
     static void initialize(DcMotor lift, Servo trigger, DcMotor flywheel, TouchSensor bottom) {
         flywheel.setPower(0);
         trigger.setPosition(0.8);
+        lift.setPower(1);
         while (!bottom.isPressed())
         {
-            lift.setPower(1);
+            ;
         }
         lift.setPower(0);
     }
@@ -19,14 +20,14 @@ public class Functions {
     {
         trigger.setPosition(1);
         flywheel.setPower(power);
+        lift.setPower(-0.6);
         while (!top.isPressed())
         {
-            lift.setPower(-0.6);
+            ;
         }
         lift.setPower(0);
     }
-    static void encoderDrive(double speed,
-                             double leftInches, double rightInches, DcMotor frontRight, DcMotor frontLeft, DcMotor backLeft, DcMotor backRight) {
+    static void encoderDrive(double speed, double leftInches, double rightInches, DcMotor frontRight, DcMotor frontLeft, DcMotor backLeft, DcMotor backRight) {
         int newFrontLeftTarget;
         int newFrontRightTarget;
         int newBackLeftTarget;
