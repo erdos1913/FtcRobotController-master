@@ -128,14 +128,10 @@ public class KareemAuto extends OpMode {
                 stage++;
                 break;
             case 2:
-<<<<<<< Updated upstream
-//                Drivetrain.rotate(-90, imu); Sorry.  Still working with the class and is still subject to change.
-=======
                 Functions.encoderDrive(1, 24, 24, frontRight, frontLeft, backLeft, backRight);
                 stage++;
             case 3:
-                Drivetrain.rotate(-90, imu);
->>>>>>> Stashed changes
+                //Drivetrain.rotate(-90, imu);
                 stage++;
                 break;
             case 4:
