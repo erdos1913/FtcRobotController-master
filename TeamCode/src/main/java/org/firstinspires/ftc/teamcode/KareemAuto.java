@@ -50,6 +50,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
 
 
 @Autonomous()
@@ -127,7 +128,7 @@ public class KareemAuto extends OpMode {
                 stage++;
                 break;
             case 2:
-                Drivetrain.rotate(-90, imu);
+//                Drivetrain.rotate(-90, imu); Sorry.  Still working with the class and is still subject to change.
                 stage++;
                 break;
             case 3:

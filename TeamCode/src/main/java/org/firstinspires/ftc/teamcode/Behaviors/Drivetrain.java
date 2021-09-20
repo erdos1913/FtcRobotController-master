@@ -7,6 +7,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import java.lang.reflect.InvocationTargetException;
 
+/*
+The Drivetrain
+ */
+
 public class Drivetrain {
 
     static boolean isBuffering = false;
