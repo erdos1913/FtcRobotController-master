@@ -64,6 +64,7 @@ public class Drivetrain {
                 }
             }
         } catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -107,7 +108,7 @@ public class Drivetrain {
                     }
                 }
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
         }
     }
