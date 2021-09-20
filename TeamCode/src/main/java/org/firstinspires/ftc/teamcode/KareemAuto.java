@@ -149,6 +149,7 @@ public class KareemAuto extends OpMode {
             default:
                 break;
         }
+        telemetry.addData("Stage", stage);
         telemetry.addData("Red", colorBottom.red());
         telemetry.addData("Blue", colorBottom.blue());
         telemetry.addData("Green", colorBottom.green());
