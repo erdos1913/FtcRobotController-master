@@ -51,9 +51,6 @@ public class EhrensAuto extends OpMode {
     static DcMotor frontRight = null;
     static DcMotor backRight = null;
     private static DcMotor flywheel = null;
-    int counter = 0;
-    double startAngle = 0;
-    double angle;
     BNO055IMU imu;
 
     /*
@@ -88,9 +85,6 @@ public class EhrensAuto extends OpMode {
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-
-        // Tell the driver that initialization is complete.
-        telemetry.addData("Status", "Initialized");
     }
 
 
@@ -101,7 +95,6 @@ public class EhrensAuto extends OpMode {
     @Override
     public void start() {
         runtime.reset();
-        startAngle=imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
         try {
             Drivetrain.rotate(this.getClass(),180,imu);
 //            Drivetrain.rotateBuffer(180,imu);
