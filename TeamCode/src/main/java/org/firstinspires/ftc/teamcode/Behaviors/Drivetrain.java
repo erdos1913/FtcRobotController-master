@@ -8,7 +8,23 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import java.lang.reflect.InvocationTargetException;
 
 /*
-The Drivetrain
+The Drivetrain class contains all sequences using the 4 drivetrain motors.
+
+For the methods to work correctly, each class they are called from must contain
+the following field declarations (public or private does not matter):
+    static DcMotor frontLeft = null;
+    static DcMotor backLeft = null;
+    static DcMotor frontRight = null;
+    static DcMotor backRight = null;
+
+In addition, each OpMode class must contain the following setter method:
+    public static void setDrivetrainMotors(Double leftPower, Double rightPower){
+        frontLeft.setPower(leftPower);
+        backLeft.setPower(leftPower);
+        frontRight.setPower(rightPower);
+        backRight.setPower(rightPower);
+    }
+
  */
 
 public class Drivetrain {
