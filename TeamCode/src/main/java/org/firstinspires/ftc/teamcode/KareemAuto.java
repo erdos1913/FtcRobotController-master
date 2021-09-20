@@ -94,6 +94,7 @@ public class KareemAuto extends OpMode {
         bottomTouch = hardwareMap.get(TouchSensor.class, "sensorBottom");
         topTouch = hardwareMap.get(TouchSensor.class, "sensorTop");
         colorBottom = hardwareMap.get(RevColorSensorV3.class, "colorBottom");
+        colorBottom.initialize();
         colorBottom.enableLed(false);
         //imu
         imu = hardwareMap.get(BNO055IMU.class, "imu");
