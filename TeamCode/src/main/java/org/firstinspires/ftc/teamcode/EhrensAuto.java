@@ -91,12 +91,6 @@ public class EhrensAuto extends OpMode {
         telemetry.addData("Status", "Initialized");
     }
 
-    public static void setDrivetrainMotors(Double leftPower, Double rightPower){
-        frontLeft.setPower(leftPower);
-        backLeft.setPower(leftPower);
-        frontRight.setPower(rightPower);
-        backRight.setPower(rightPower);
-    }
 
     @Override
     public void init_loop() {
@@ -107,8 +101,9 @@ public class EhrensAuto extends OpMode {
         runtime.reset();
         startAngle=imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
         try {
-            Drivetrain.rotateBuffer(180,imu);
-        } catch (ClassNotFoundException | IllegalAccessException e) {
+            Drivetrain.rotate(this.getClass(),180,imu);
+//            Drivetrain.rotateBuffer(180,imu);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -119,6 +114,13 @@ public class EhrensAuto extends OpMode {
 
     @Override
     public void stop() {
+    }
+
+    public static void setDrivetrainMotors(Double leftPower, Double rightPower){
+        frontLeft.setPower(leftPower);
+        backLeft.setPower(leftPower);
+        frontRight.setPower(rightPower);
+        backRight.setPower(rightPower);
     }
 
 }

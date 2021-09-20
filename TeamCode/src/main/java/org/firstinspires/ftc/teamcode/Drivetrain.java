@@ -12,7 +12,10 @@ public class Drivetrain {
 
     static boolean isBuffering = false;
 
-    public static void rotate(double a, BNO055IMU imu) {
+    public static void rotate(Class c, double a, BNO055IMU imu) throws Exception {
+        if (isBuffering){
+            throw new Exception("Cannot buffer more than one Drivetrain action at once");
+        }
         double startAngle;
         double angle;
         startAngle = startAngle = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
@@ -29,17 +32,26 @@ public class Drivetrain {
                 leftPower = Double.valueOf(Range.clip(1 - Math.pow(angle / a, 2), 0.3, 1.0));
                 rightPower = Double.valueOf(Range.clip(Math.pow(angle / a, 2) - 1, -1.0, -0.3));
             }
-            EhrensAuto.frontLeft.setPower(leftPower);
-            EhrensAuto.backLeft.setPower(leftPower);
-            EhrensAuto.frontRight.setPower(rightPower);
-            EhrensAuto.backRight.setPower(rightPower);
+            String className = c.getName();
+            Class.forName(className).getMethods();
+            Class opMode = Class.forName(className);
+            try {
+                opMode.getMethod("setDrivetrainMotors",Double.class,Double.class).invoke(null,leftPower,rightPower);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public static void rotateBuffer(double a, BNO055IMU imu) throws ClassNotFoundException, IllegalAccessException {
+    public static void rotateBuffer(double a, BNO055IMU imu) throws Exception {
         try {
             return;
         } finally {
+            if (isBuffering){
+                throw new Exception("Cannot buffer more than one Drivetrain action at once");
+            }
             isBuffering = true;
             double startAngle;
             double angle;
@@ -66,11 +78,12 @@ public class Drivetrain {
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
                 }
-                if (leftPower==0||rightPower==0){
+                if (leftPower==0&&rightPower==0){
                     isBuffering = false;
                     return;
                 }
             }
         }
     }
+
 }
