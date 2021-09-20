@@ -128,23 +128,30 @@ public class KareemAuto extends OpMode {
                 stage++;
                 break;
             case 2:
+<<<<<<< Updated upstream
 //                Drivetrain.rotate(-90, imu); Sorry.  Still working with the class and is still subject to change.
+=======
+                Functions.encoderDrive(1, 24, 24, frontRight, frontLeft, backLeft, backRight);
+                stage++;
+            case 3:
+                Drivetrain.rotate(-90, imu);
+>>>>>>> Stashed changes
                 stage++;
                 break;
-            case 3:
+            case 4:
                 Functions.encoderDrive(1, 27, 27, frontRight, frontLeft, backLeft, backRight);
                 stage++;
-            case 4:
+            case 5:
                 flywheel.setPower(1);
                 while (flywheel.getPower() != 1)
                 {
                     ;
                 }
                 stage++;
-            case 5:
+            case 6:
                 Functions.launch_ring(trigger, lift, flywheel, 1.0, topTouch);
                 stage++;
-            case 6:
+            case 7:
                 Functions.initialize(lift, trigger, flywheel, bottomTouch);
                 stage++;
             default:
