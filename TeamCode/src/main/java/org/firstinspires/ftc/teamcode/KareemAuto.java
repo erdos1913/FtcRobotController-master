@@ -69,7 +69,6 @@ public class KareemAuto extends OpMode {
     private DcMotor arm = null;
     private DcMotor intake = null;
     private DcMotor lift = null;
-    private boolean ready = false;
     private int stage = 0;
     private BNO055IMU imu = null;
     private TouchSensor bottomTouch = null;
@@ -99,6 +98,7 @@ public class KareemAuto extends OpMode {
         //I2cAddr address = new I2cAddr(0x52);
         //RevColorSensorV3.Parameters parameter = new RevColorSensorV3.Parameters(address, );
         //colorBottom.initialize(parameter);
+        colorBottom.getConnectionInfo();
         colorBottom.enableLed(false);
         //imu
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -124,7 +124,6 @@ public class KareemAuto extends OpMode {
                 frontLeft.setPower(1);
                 while (colorBottom.blue() < 120)
                 {
-                    ;
                 }
                 backLeft.setPower(0);
                 backRight.setPower(0);
@@ -146,7 +145,6 @@ public class KareemAuto extends OpMode {
                 flywheel.setPower(1);
                 while (flywheel.getPower() != 1)
                 {
-                    ;
                 }
                 stage++;
             case 6:
