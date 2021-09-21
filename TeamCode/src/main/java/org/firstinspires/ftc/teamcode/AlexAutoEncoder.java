@@ -118,16 +118,19 @@ public class AlexAutoEncoder extends LinearOpMode {
 
         while(opModeIsActive()) {
             if(gamepad1.a) {
-                encoderDrive(DRIVE_SPEED,  -24,  -24, 5.0);
+                //encoderDrive(DRIVE_SPEED,  -24,  -24, 5.0);
+                Functions.encoderDrive(DRIVE_SPEED, -24, -24, robot.frontLeft, robot.frontRight, robot.backLeft, robot.backRight);
             }
             if(gamepad1.x) {
-                encoderDrive(TURN_SPEED, 12, -12, 4.0); //90?
+//                encoderDrive(TURN_SPEED, 12, -12, 4.0); //90?
+                Functions.encoderDrive(TURN_SPEED, 9, -9, robot.frontLeft, robot.frontRight, robot.backLeft, robot.backRight);
             }
             if(gamepad1.y) {
-                encoderDrive(TURN_SPEED, -9, 9, 4.0); //90?
+                Functions.encoderDrive(TURN_SPEED, -9, 9, robot.frontLeft, robot.frontRight, robot.backLeft, robot.backRight); //90?
             }
             if(gamepad1.b) {
-                encoderDrive(DRIVE_SPEED, 24, 24, 5.0);
+//                encoderDrive(DRIVE_SPEED, 24, 24, 5.0);
+                Functions.encoderDrive(DRIVE_SPEED, 24, 24, robot.frontLeft, robot.frontRight, robot.backLeft, robot.backRight);
             }
             if(gamepad1.right_bumper) {
                 Functions.launch_ring(robot.trigger, robot.lift, robot.flywheel, 0.8, robot.top);
