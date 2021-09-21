@@ -31,33 +31,37 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
+
+import java.lang.reflect.InvocationTargetException;
 // import components
 
 
 @Autonomous(name="Ehren's Auto", group="Iterative Opmode")
-public class EhrensAuto extends OpMode {
+public class EhrensAuto extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    static DcMotor frontLeft = null;
-    static DcMotor backLeft = null;
-    static DcMotor frontRight = null;
-    static DcMotor backRight = null;
+    DcMotor frontLeft = null;
+    DcMotor backLeft = null;
+    DcMotor frontRight = null;
+    DcMotor backRight = null;
     private static DcMotor flywheel = null;
+    double startAngle;
+    double angle;
     BNO055IMU imu;
 
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
     @Override
-    public void init() {
+    public void runOpMode() throws InterruptedException {
         telemetry.addData("Status", "Initialized");
 
         // Initialize the hardware variables. Note that the strings used here as parameters
@@ -85,37 +89,25 @@ public class EhrensAuto extends OpMode {
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-    }
-
-
-    @Override
-    public void init_loop() {
-    }
-
-    @Override
-    public void start() {
+        startAngle = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+        angle = startAngle;
+        waitForStart();
         runtime.reset();
-        try {
-            Drivetrain.rotate(this.getClass(),180,imu);
-//            Drivetrain.rotateBuffer(180,imu);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Drivetrain.rotate(this.getClass(),180,imu);
+
     }
 
-    @Override
-    public void loop() {
-    }
-
-    @Override
-    public void stop() {
-    }
-
-    public static void setDrivetrainMotors(Double leftPower, Double rightPower){
+    public void setDrivetrainMotors(Double leftPower, Double rightPower){
         frontLeft.setPower(leftPower);
         backLeft.setPower(leftPower);
         frontRight.setPower(rightPower);
         backRight.setPower(rightPower);
+    }
+
+    public void setTelemetry(String[][] messages){
+        for (String[] message: messages) {
+            telemetry.addData(message[0],message[1]);
+        }
     }
 
 }

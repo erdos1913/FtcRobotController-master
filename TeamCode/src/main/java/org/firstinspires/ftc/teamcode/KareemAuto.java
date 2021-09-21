@@ -38,7 +38,6 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gyroscope;
-import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchSimple;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -52,7 +51,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
-
 
 
 @Autonomous()
@@ -69,11 +67,12 @@ public class KareemAuto extends OpMode {
     private DcMotor arm = null;
     private DcMotor intake = null;
     private DcMotor lift = null;
+    private boolean ready = false;
     private int stage = 0;
     private BNO055IMU imu = null;
     private TouchSensor bottomTouch = null;
     private TouchSensor topTouch = null;
-    private ColorSensor colorBottom = null;
+    private RevColorSensorV3 colorBottom = null;
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
@@ -94,11 +93,8 @@ public class KareemAuto extends OpMode {
         //sensors
         bottomTouch = hardwareMap.get(TouchSensor.class, "sensorBottom");
         topTouch = hardwareMap.get(TouchSensor.class, "sensorTop");
-        colorBottom = hardwareMap.get(ColorSensor.class, "colorBottom");
-        //I2cAddr address = new I2cAddr(0x52);
-        //RevColorSensorV3.Parameters parameter = new RevColorSensorV3.Parameters(address, );
-        //colorBottom.initialize(parameter);
-        colorBottom.getConnectionInfo();
+        colorBottom = hardwareMap.get(RevColorSensorV3.class, "colorBottom");
+        colorBottom.initialize();
         colorBottom.enableLed(false);
         //imu
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -124,6 +120,7 @@ public class KareemAuto extends OpMode {
                 frontLeft.setPower(1);
                 while (colorBottom.blue() < 120)
                 {
+                    ;
                 }
                 backLeft.setPower(0);
                 backRight.setPower(0);
@@ -132,19 +129,20 @@ public class KareemAuto extends OpMode {
                 stage++;
                 break;
             case 2:
-                Functions.encoderDrive(1, 28, 28, frontRight, frontLeft, backLeft, backRight);
+                Functions.encoderDrive(1, 24, 24, frontRight, frontLeft, backLeft, backRight);
                 stage++;
             case 3:
                 //Drivetrain.rotate(-90, imu);
                 stage++;
                 break;
             case 4:
-                Functions.encoderDrive(1, 51, 51, frontRight, frontLeft, backLeft, backRight);
+                Functions.encoderDrive(1, 27, 27, frontRight, frontLeft, backLeft, backRight);
                 stage++;
             case 5:
                 flywheel.setPower(1);
                 while (flywheel.getPower() != 1)
                 {
+                    ;
                 }
                 stage++;
             case 6:
