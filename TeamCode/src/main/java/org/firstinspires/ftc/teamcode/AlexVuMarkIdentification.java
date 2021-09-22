@@ -66,7 +66,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * is explained in {@link ConceptVuforiaNavigation}.
  */
 
-@TeleOp(name="Alex: VuMark Id", group ="Vision")
+@TeleOp(name="Alex: VuMark Id", group ="Concept")
 
 public class AlexVuMarkIdentification extends LinearOpMode {
 
