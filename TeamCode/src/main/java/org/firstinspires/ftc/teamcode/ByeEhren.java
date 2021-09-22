@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
-public class HiEhren extends LinearOpMode {
+public class ByeEhren extends LinearOpMode {
 
 
     private Gyroscope imu;
