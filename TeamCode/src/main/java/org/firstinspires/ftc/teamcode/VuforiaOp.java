@@ -44,7 +44,6 @@ public class VuforiaOp extends LinearOpMode {
 
         while(opModeIsActive())
         {
-            params.vuforiaLicenseKey = RC.VUFORIA_LICENSE_KEY;
             params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
             Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true);
             vuforia.setFrameQueueCapacity(1);
