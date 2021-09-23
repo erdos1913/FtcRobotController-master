@@ -172,6 +172,7 @@ public class AlexVuMarkIdentificationWebcam extends LinearOpMode {
                     double tX = trans.get(0);
                     double tY = trans.get(1);
                     double tZ = trans.get(2);
+                    // picture found at 1218 tz
 
                     // Extract the rotational components of the target relative to the robot
                     double rX = rot.firstAngle;
