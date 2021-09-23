@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.vuforia.HINT;
+import com.vuforia.Image;
 import com.vuforia.Matrix34F;
+import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Tool;
 import com.vuforia.Vec2F;
 import com.vuforia.Vec3F;
@@ -26,7 +28,7 @@ public class VuforiaOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-        params.vuforiaLicenseKey = "FTC10237";
+        params.vuforiaLicenseKey = "ATLBIAn/////AAABmR9jXL4mVkCVlS3czuUEqVEZgVqD7w3Z4uaIJkGio0URiF8lIAErs7kiyVZUlYixochfzcUoJNf2SFphNNO9Src7sGGrCI7eM0LMMQkzBp2boM0ZYqfMOxIh1boee3VnPEuj3nNBTOxRfbc3BozDP/NpiIfhJoBML/YcvL+AEWdiHlxWD/ShveDB8lo2N2VQok00Y/9l8owMFi8er3EyOKNvJkKgS5yrDiys+ciIybloaJEHNAiyMa7xw3KGNoduvdVNQlZeRXAS+71658xe2ZxuSgvOfnklQRaRQCh+EbL2Ds5g9fvnBs0Kb+f3GeAtFQnmx2ERhDqBmsPuUZNRgMxrpyYm+J/1PgYlrGMFdxe1\n";
         params.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
         VuforiaLocalizerImplSubclass vuforia = new VuforiaLocalizerImplSubclass(params);
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
@@ -42,28 +44,21 @@ public class VuforiaOp extends LinearOpMode {
 
         while(opModeIsActive())
         {
-            if (vuforia.rgb != null)
-            {
-                Bitmap bm = Bitmap.createBitmap(vuforia.rgb.getWidth(), vuforia.rgb.getHeight(), Bitmap.Config.RGB_565);
-                bm.copyPixelsFromBuffer(vuforia.rgb.getPixels());
-                vuforia.getFrameQueue().take().getImage(1);
+            params.vuforiaLicenseKey = RC.VUFORIA_LICENSE_KEY;
+            params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+            Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true);
+            vuforia.setFrameQueueCapacity(1);
 
-            }
+            VuforiaLocalizer.CloseableFrame frame = vuforia.getFrameQueue().take();
+            Image rgb = null;
 
-            for (VuforiaTrackable beac : beacons)
-            {
-                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beac.getListener()).getRawPose();
+            long numImages = frame.getNumImages();
 
-                if (pose != null)
-                {
-                    Matrix34F rawPose = new Matrix34F();
-                    float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
-                    rawPose.setData(poseData);
 
-                    Vec2F upperLeft = Tool.projectPoint(com.vuforia.CameraDevice.getInstance().getCameraCalibration(), rawPose, new Vec3F(-127, 92, 0));
-                    Vec2F upperRight = Tool.projectPoint(com.vuforia.CameraDevice.getInstance().getCameraCalibration(), rawPose, new Vec3F(127, 92, 0));
-                    Vec2F lowerRight = Tool.projectPoint(com.vuforia.CameraDevice.getInstance().getCameraCalibration(), rawPose, new Vec3F(127, -92, 0));
-                    Vec2F lowerLeft = Tool.projectPoint(com.vuforia.CameraDevice.getInstance().getCameraCalibration(), rawPose, new Vec3F(-127, -92, 0));
+            for (int i = 0; i < numImages; i++) {
+                if (frame.getImage(i).getFormat() == PIXEL_FORMAT.RGB565) {
+                    rgb = frame.getImage(i);
+                    break;
                 }
             }
             telemetry.update();
