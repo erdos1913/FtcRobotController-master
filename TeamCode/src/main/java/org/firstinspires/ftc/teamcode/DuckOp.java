@@ -28,8 +28,8 @@
  */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -68,8 +68,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * is explained in {@link ConceptVuforiaNavigationWebcam}.
  */
 
-@TeleOp(name="WebCam ID", group ="Concept")
-public class VuforiaOp extends LinearOpMode {
+@TeleOp(name="Duck ID", group ="Concept")
+public class DuckOp extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
 
@@ -139,36 +139,29 @@ public class VuforiaOp extends LinearOpMode {
          * but differ in their instance id information.
          * @see VuMarkInstanceId
          */
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        VuforiaTrackables duckTrackables = this.vuforia.loadTrackablesFromAsset("/Users/kfareed24/Documents/GitHub/FtcRobotController-master/FtcRobotController/src/main/assets/duck1.xml");
+        VuforiaTrackable duckTrackable = duckTrackables.get(0);
+        duckTrackable.setName("duckTemplate"); // can help in debugging; otherwise not necessary
 
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
         waitForStart();
 
-        relicTrackables.activate();
+        duckTrackables.activate();
 
         while (opModeIsActive()) {
-
-            /**
-             * See if any of the instances of {@link relicTemplate} are currently visible.
-             * {@link RelicRecoveryVuMark} is an enum which can have the following values:
-             * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
-             * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
-             */
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+            Duck duck = Duck.from(duckTrackable);
+            if (duck != Duck.UNKNOWN) {
 
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
-                telemetry.addData("VuMark", "%s visible", vuMark);
+                telemetry.addData("Duck", "%s visible", duck);
 
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
                  * we illustrate it nevertheless, for completeness. */
-                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getFtcCameraFromTarget();
+                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)duckTrackable.getListener()).getFtcCameraFromTarget();
                 telemetry.addData("Pose", format(pose));
 
                 /* We further illustrate how to decompose the pose into useful rotational and
@@ -210,65 +203,6 @@ public class VuforiaOp extends LinearOpMode {
                             frontRight.setPower(0);
                         }
                     }
-                    if (rY != 0) {
-                        if (rY > 0) {
-                            if ((180 - rY) > 0) {
-                                if ((180 - rY) > error_range) {
-                                    telemetry.addData("Status", "Rotating right");
-                                    backLeft.setPower(-0.5);
-                                    backRight.setPower(0.5);
-                                    frontLeft.setPower(-0.5);
-                                    frontRight.setPower(0.5);
-                                } else {
-                                    if (Math.abs(backLeft.getPower()) > 0) {
-                                        backLeft.setPower(0);
-                                        backRight.setPower(0);
-                                        frontLeft.setPower(0);
-                                        frontRight.setPower(0);
-                                    }
-                                }
-                            } else {
-                                if (Math.abs(backLeft.getPower()) > 0) {
-                                    backLeft.setPower(0);
-                                    backRight.setPower(0);
-                                    frontLeft.setPower(0);
-                                    frontRight.setPower(0);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if ((180 - Math.abs(rY)) > 0)
-                            {
-                                if ((180 - Math.abs(rY)) > error_range)
-                                {
-                                    telemetry.addData("Status", "Rotating left");
-                                    backRight.setPower(-0.5);
-                                    backLeft.setPower(0.5);
-                                    frontRight.setPower(-0.5);
-                                    frontLeft.setPower(0.5);
-                                }
-                                else
-                                {
-                                    if (Math.abs(backLeft.getPower()) > 0) {
-                                        backLeft.setPower(0);
-                                        backRight.setPower(0);
-                                        frontLeft.setPower(0);
-                                        frontRight.setPower(0);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (Math.abs(backLeft.getPower()) > 0) {
-                                    backLeft.setPower(0);
-                                    backRight.setPower(0);
-                                    frontLeft.setPower(0);
-                                    frontRight.setPower(0);
-                                }
-                            }
-                        }
-                    }
                 }
                 else {
                     if (Math.abs(backLeft.getPower()) > 0) {
@@ -280,8 +214,8 @@ public class VuforiaOp extends LinearOpMode {
                 }
             }
             else {
-                telemetry.addData("VuMark", "not visible");
-                telemetry.addData("State", "Locating VuMark");
+                telemetry.addData("Duck", "not visible");
+                telemetry.addData("State", "Locating Duck");
                 if (backLeft.getPower() > 0)
                 {
                     backLeft.setPower(0.1);
