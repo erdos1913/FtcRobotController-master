@@ -1,66 +1,303 @@
+/* Copyright (c) 2017 FIRST. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted (subject to the limitations in the disclaimer below) provided that
+ * the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this list
+ * of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * promote products derived from this software without specific prior written permission.
+ *
+ * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
+ * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Bitmap;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.vuforia.HINT;
-import com.vuforia.Image;
-import com.vuforia.Matrix34F;
-import com.vuforia.PIXEL_FORMAT;
-import com.vuforia.Tool;
-import com.vuforia.Vec2F;
-import com.vuforia.Vec3F;
-import com.vuforia.Vuforia;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigationWebcam;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaTrackableContainer;
 
-import java.util.Arrays;
+/**
+ * This OpMode illustrates the basics of using the Vuforia engine to determine
+ * the identity of Vuforia VuMarks encountered on the field. The code is structured as
+ * a LinearOpMode. It shares much structure with {@link ConceptVuforiaNavigationWebcam}; we do not here
+ * duplicate the core Vuforia documentation found there, but rather instead focus on the
+ * differences between the use of Vuforia for navigation vs VuMark identification.
+ *
+ * @see ConceptVuforiaNavigationWebcam
+ * @see VuforiaLocalizer
+ * @see VuforiaTrackableDefaultListener
+ * see  ftc_app/doc/tutorial/FTC_FieldCoordinateSystemDefinition.pdf
+ *
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
+ *
+ * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
+ * is explained in {@link ConceptVuforiaNavigationWebcam}.
+ */
 
-@Autonomous
+@TeleOp(name="WebCam ID", group ="Concept")
 public class VuforiaOp extends LinearOpMode {
-    @Override
-    public void runOpMode() throws InterruptedException {
-        VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-        params.vuforiaLicenseKey = "ATLBIAn/////AAABmR9jXL4mVkCVlS3czuUEqVEZgVqD7w3Z4uaIJkGio0URiF8lIAErs7kiyVZUlYixochfzcUoJNf2SFphNNO9Src7sGGrCI7eM0LMMQkzBp2boM0ZYqfMOxIh1boee3VnPEuj3nNBTOxRfbc3BozDP/NpiIfhJoBML/YcvL+AEWdiHlxWD/ShveDB8lo2N2VQok00Y/9l8owMFi8er3EyOKNvJkKgS5yrDiys+ciIybloaJEHNAiyMa7xw3KGNoduvdVNQlZeRXAS+71658xe2ZxuSgvOfnklQRaRQCh+EbL2Ds5g9fvnBs0Kb+f3GeAtFQnmx2ERhDqBmsPuUZNRgMxrpyYm+J/1PgYlrGMFdxe1\n";
-        params.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
-        VuforiaLocalizerImplSubclass vuforia = new VuforiaLocalizerImplSubclass(params);
-        Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
-        VuforiaTrackables beacons = vuforia.loadTrackablesFromAsset("FTC_2016-17");
-        beacons.get(0).setName("Wheels");
-        beacons.get(1).setName("Tools");
-        beacons.get(2).setName("Lego");
-        beacons.get(3).setName("Gears");
 
+    public static final String TAG = "Vuforia VuMark Sample";
+
+    OpenGLMatrix lastLocation = null;
+
+    /**
+     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
+     * localization engine.
+     */
+    VuforiaLocalizer vuforia;
+
+    /**
+     * This is the webcam we are to use. As with other hardware devices such as motors and
+     * servos, this device is identified using the robot configuration tool in the FTC application.
+     */
+    WebcamName webcamName;
+    float error_range = 5;
+    @Override public void runOpMode() {
+        DcMotor frontLeft  = hardwareMap.get(DcMotor .class, "frontLeft");
+        DcMotor backLeft = hardwareMap.get(DcMotor.class, "backLeft");
+        DcMotor frontRight  = hardwareMap.get(DcMotor.class, "frontRight");
+        DcMotor backRight = hardwareMap.get(DcMotor.class, "backRight");
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        /*
+         * Retrieve the camera we are to use.
+         */
+        webcamName = hardwareMap.get(WebcamName.class, "frontCamera");
+
+        /*
+         * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
+         * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
+         */
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        // OR...  Do Not Activate the Camera Monitor View, to save power
+        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        /*
+         * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
+         * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
+         * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
+         * web site at https://developer.vuforia.com/license-manager.
+         *
+         * Vuforia license keys are always 380 characters long, and look as if they contain mostly
+         * random data. As an example, here is a example of a fragment of a valid key:
+         *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
+         * Once you've obtained a license key, copy the string from the Vuforia web site
+         * and paste it in to your code on the next line, between the double quotes.
+         */
+        parameters.vuforiaLicenseKey = "ATsWqNz/////AAABmWYRlY7DGU8dtTwW/Yw4PNtPvPXxTdmekWVEYn733h49VAyjzQnsW1TZ+VVTaO7AekdQGZr/KSuDrOw9AI68/uRoZsF1ukki/sKQE/vKPKvK0mOz3l0KfdFiuSKRXZHVlvGdDok1elfQEkFndz/I3GgTFLD6JNBONF5M4khp36vjBP2a/IPvQsefLMDwrvNirNfPMYnRKHH6+d8z3sbWBwfQp7i1c5l0hgcljwPT1Qq1dzYufmsFmvqsioIcZH0G1TuWWHxnBvrpN9/l4dV8gxA6+XdaAiABeiU7d+tzzUMuoLHt9iUW98+/mG4RqpecRTyMnk+ne5LXpyWfXdXsaTInZ7yh2/QaWgUDDfktkWuK";
+
+
+        /**
+         * We also indicate which camera on the RC we wish to use. For pedagogical purposes,
+         * we use the same logic as in {@link ConceptVuforiaNavigationWebcam}.
+         */
+        parameters.cameraName = webcamName;
+        this.vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        /**
+         * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
+         * in this data set: all three of the VuMarks in the game were created from this one template,
+         * but differ in their instance id information.
+         * @see VuMarkInstanceId
+         */
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+
+        telemetry.addData(">", "Press Play to start");
+        telemetry.update();
         waitForStart();
 
-        beacons.activate();
+        relicTrackables.activate();
 
-        while(opModeIsActive())
-        {
-            params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-            Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true);
-            vuforia.setFrameQueueCapacity(1);
+        while (opModeIsActive()) {
 
-            VuforiaLocalizer.CloseableFrame frame = vuforia.getFrameQueue().take();
-            Image rgb = null;
+            /**
+             * See if any of the instances of {@link relicTemplate} are currently visible.
+             * {@link RelicRecoveryVuMark} is an enum which can have the following values:
+             * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
+             * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
+             */
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
-            long numImages = frame.getNumImages();
+                /* Found an instance of the template. In the actual game, you will probably
+                 * loop until this condition occurs, then move on to act accordingly depending
+                 * on which VuMark was visible. */
+                telemetry.addData("VuMark", "%s visible", vuMark);
 
+                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
+                 * it is perhaps unlikely that you will actually need to act on this pose information, but
+                 * we illustrate it nevertheless, for completeness. */
+                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getFtcCameraFromTarget();
+                telemetry.addData("Pose", format(pose));
 
-            for (int i = 0; i < numImages; i++) {
-                if (frame.getImage(i).getFormat() == PIXEL_FORMAT.RGB565) {
-                    rgb = frame.getImage(i);
-                    break;
+                /* We further illustrate how to decompose the pose into useful rotational and
+                 * translational components */
+                if (pose != null) {
+                    VectorF trans = pose.getTranslation();
+                    Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+
+                    // Extract the X, Y, and Z components of the offset of the target relative to the robot
+                    double tX = trans.get(0);
+                    double tY = trans.get(1);
+                    double tZ = trans.get(2);
+
+                    // Extract the rotational components of the target relative to the robot
+                    double rX = rot.firstAngle;
+                    double rY = rot.secondAngle;
+                    double rZ = rot.thirdAngle;
+                    telemetry.addData("TX", tX);
+                    telemetry.addData("TY", tY);
+                    telemetry.addData("TZ", tZ);
+                    telemetry.addData("RX", rX);
+                    telemetry.addData("RY", rY);
+                    telemetry.addData("RZ", rZ);
+                    if (tZ > 400) {
+                        if (backLeft.getPower() == 0) {
+                            backLeft.setPower(-0.5);
+                            backRight.setPower(-0.5);
+                            frontLeft.setPower(-0.5);
+                            frontRight.setPower(-0.5);
+                        }
+                    }
+                    else {
+                        if (Math.abs(backLeft.getPower()) > 0) {
+                            backLeft.setPower(0);
+                            backRight.setPower(0);
+                            frontLeft.setPower(0);
+                            frontRight.setPower(0);
+                        }
+                    }
+                    if (rY != 0) {
+                        if (rY > 0) {
+                            if ((180 - rY) > 0) {
+                                if ((180 - rY) > error_range) {
+                                    backLeft.setPower(0.3);
+                                    backRight.setPower(-0.3);
+                                    frontLeft.setPower(0.3);
+                                    frontRight.setPower(-0.3);
+                                } else {
+                                    if (Math.abs(backLeft.getPower()) > 0) {
+                                        backLeft.setPower(0);
+                                        backRight.setPower(0);
+                                        frontLeft.setPower(0);
+                                        frontRight.setPower(0);
+                                    }
+                                }
+                            } else {
+                                if (Math.abs(backLeft.getPower()) > 0) {
+                                    backLeft.setPower(0);
+                                    backRight.setPower(0);
+                                    frontLeft.setPower(0);
+                                    frontRight.setPower(0);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if ((180 - Math.abs(rY)) > 0)
+                            {
+                                if ((180 - Math.abs(rY)) > error_range)
+                                {
+                                    backRight.setPower(0.3);
+                                    backLeft.setPower(-0.3);
+                                    frontRight.setPower(0.3);
+                                    frontLeft.setPower(-0.3);
+                                }
+                                else
+                                {
+                                    if (Math.abs(backLeft.getPower()) > 0) {
+                                        backLeft.setPower(0);
+                                        backRight.setPower(0);
+                                        frontLeft.setPower(0);
+                                        frontRight.setPower(0);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (Math.abs(backLeft.getPower()) > 0) {
+                                    backLeft.setPower(0);
+                                    backRight.setPower(0);
+                                    frontLeft.setPower(0);
+                                    frontRight.setPower(0);
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    if (Math.abs(backLeft.getPower()) > 0) {
+                        backLeft.setPower(0);
+                        backRight.setPower(0);
+                        frontLeft.setPower(0);
+                        frontRight.setPower(0);
+                    }
                 }
             }
+            else {
+                telemetry.addData("VuMark", "not visible");
+                if (backLeft.getPower() > 0)
+                {
+                    backLeft.setPower(0.1);
+                    backRight.setPower(-0.1);
+                    frontLeft.setPower(0.1);
+                    frontRight.setPower(-0.1);
+                }
+                else if (backLeft.getPower() < 0 || backLeft.getPower() == 0)
+                {
+                    backLeft.setPower(-0.1);
+                    backRight.setPower(0.1);
+                    frontLeft.setPower(-0.1);
+                    frontRight.setPower(0.1);
+                }
+            }
+
             telemetry.update();
         }
+    }
+
+    String format(OpenGLMatrix transformationMatrix) {
+        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 }

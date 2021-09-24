@@ -72,7 +72,7 @@ public class KareemAuto extends OpMode {
     private BNO055IMU imu = null;
     private TouchSensor bottomTouch = null;
     private TouchSensor topTouch = null;
-    private RevColorSensorV3 colorBottom = null;
+    private ColorSensor colorBottom = null;
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
@@ -93,8 +93,8 @@ public class KareemAuto extends OpMode {
         //sensors
         bottomTouch = hardwareMap.get(TouchSensor.class, "sensorBottom");
         topTouch = hardwareMap.get(TouchSensor.class, "sensorTop");
-        colorBottom = hardwareMap.get(RevColorSensorV3.class, "colorBottom");
-        colorBottom.initialize();
+        colorBottom = hardwareMap.get(ColorSensor.class, "colorBottom");
+        //colorBottom.initialize();
         colorBottom.enableLed(false);
         //imu
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -155,6 +155,12 @@ public class KareemAuto extends OpMode {
                 break;
         }
         telemetry.addData("Stage", stage);
+        telemetry.addData("Status", colorBottom.getConnectionInfo());
+        telemetry.addData("red detected", colorBottom.red());
+//        telemetry.addData("Status", colorBottom.getLightDetected());
+//        telemetry.addData("Status", colorBottom.getRawLightDetected());
+//        telemetry.addData("Status", colorBottom.getRawLightDetectedMax());
+//        telemetry.addData("Status", colorBottom.status());
         telemetry.addData("Red", colorBottom.red());
         telemetry.addData("Blue", colorBottom.blue());
         telemetry.addData("Green", colorBottom.green());
