@@ -193,6 +193,7 @@ public class VuforiaOp extends LinearOpMode {
                     telemetry.addData("RY", rY);
                     telemetry.addData("RZ", rZ);
                     if (tZ > 400) {
+                        telemetry.addData("Status", "Moving towards VuMark");
                         if (backLeft.getPower() == 0) {
                             backLeft.setPower(-0.5);
                             backRight.setPower(-0.5);
@@ -201,6 +202,7 @@ public class VuforiaOp extends LinearOpMode {
                         }
                     }
                     else {
+                        telemetry.addData("Status", "Arrived");
                         if (Math.abs(backLeft.getPower()) > 0) {
                             backLeft.setPower(0);
                             backRight.setPower(0);
@@ -212,6 +214,7 @@ public class VuforiaOp extends LinearOpMode {
                         if (rY > 0) {
                             if ((180 - rY) > 0) {
                                 if ((180 - rY) > error_range) {
+                                    telemetry.addData("Status", "Rotating left");
                                     backLeft.setPower(0.3);
                                     backRight.setPower(-0.3);
                                     frontLeft.setPower(0.3);
@@ -239,6 +242,7 @@ public class VuforiaOp extends LinearOpMode {
                             {
                                 if ((180 - Math.abs(rY)) > error_range)
                                 {
+                                    telemetry.addData("Status", "Rotating right");
                                     backRight.setPower(0.3);
                                     backLeft.setPower(-0.3);
                                     frontRight.setPower(0.3);
@@ -277,6 +281,7 @@ public class VuforiaOp extends LinearOpMode {
             }
             else {
                 telemetry.addData("VuMark", "not visible");
+                telemetry.addData("State", "Locating VuMark");
                 if (backLeft.getPower() > 0)
                 {
                     backLeft.setPower(0.1);
