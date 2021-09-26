@@ -133,12 +133,7 @@ public class VuforiaOp extends LinearOpMode {
         parameters.cameraName = webcamName;
         this.vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
-        /**
-         * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
-         * in this data set: all three of the VuMarks in the game were created from this one template,
-         * but differ in their instance id information.
-         * @see VuMarkInstanceId
-         */
+        boolean rotated = false;
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
@@ -150,39 +145,22 @@ public class VuforiaOp extends LinearOpMode {
         relicTrackables.activate();
 
         while (opModeIsActive()) {
-
-            /**
-             * See if any of the instances of {@link relicTemplate} are currently visible.
-             * {@link RelicRecoveryVuMark} is an enum which can have the following values:
-             * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
-             * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
-             */
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
-                /* Found an instance of the template. In the actual game, you will probably
-                 * loop until this condition occurs, then move on to act accordingly depending
-                 * on which VuMark was visible. */
                 telemetry.addData("VuMark", "%s visible", vuMark);
 
-                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
-                 * it is perhaps unlikely that you will actually need to act on this pose information, but
-                 * we illustrate it nevertheless, for completeness. */
-                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getFtcCameraFromTarget();
-                telemetry.addData("Pose", format(pose));
 
-                /* We further illustrate how to decompose the pose into useful rotational and
-                 * translational components */
+                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getFtcCameraFromTarget();
+
                 if (pose != null) {
                     VectorF trans = pose.getTranslation();
                     Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
-                    // Extract the X, Y, and Z components of the offset of the target relative to the robot
                     double tX = trans.get(0);
                     double tY = trans.get(1);
                     double tZ = trans.get(2);
 
-                    // Extract the rotational components of the target relative to the robot
                     double rX = rot.firstAngle;
                     double rY = rot.secondAngle;
                     double rZ = rot.thirdAngle;
@@ -192,7 +170,7 @@ public class VuforiaOp extends LinearOpMode {
                     telemetry.addData("RX", rX);
                     telemetry.addData("RY", rY);
                     telemetry.addData("RZ", rZ);
-                    if (tZ > 400) {
+                    if (tZ > 600) {
                         telemetry.addData("Status", "Moving towards VuMark");
                         if (backLeft.getPower() == 0) {
                             backLeft.setPower(-0.5);
@@ -225,6 +203,20 @@ public class VuforiaOp extends LinearOpMode {
                                         backRight.setPower(0);
                                         frontLeft.setPower(0);
                                         frontRight.setPower(0);
+                                        while (tZ > 350)
+                                        {
+                                            pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getFtcCameraFromTarget();
+                                            trans = pose.getTranslation();
+                                            tZ = trans.get(2);
+                                            backLeft.setPower(-0.5);
+                                            backRight.setPower(-0.5);
+                                            frontLeft.setPower(-0.5);
+                                            frontRight.setPower(-0.5);
+                                        }
+                                        backLeft.setPower(0);
+                                        backRight.setPower(0);
+                                        frontLeft.setPower(0);
+                                        frontRight.setPower(0);
                                     }
                                 }
                             } else {
@@ -247,6 +239,20 @@ public class VuforiaOp extends LinearOpMode {
                                     backLeft.setPower(0.5);
                                     frontRight.setPower(-0.5);
                                     frontLeft.setPower(0.5);
+                                    while (tZ > 350)
+                                    {
+                                        pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getFtcCameraFromTarget();
+                                        trans = pose.getTranslation();
+                                        tZ = trans.get(2);
+                                        backLeft.setPower(-0.5);
+                                        backRight.setPower(-0.5);
+                                        frontLeft.setPower(-0.5);
+                                        frontRight.setPower(-0.5);
+                                    }
+                                    backLeft.setPower(0);
+                                    backRight.setPower(0);
+                                    frontLeft.setPower(0);
+                                    frontRight.setPower(0);
                                 }
                                 else
                                 {

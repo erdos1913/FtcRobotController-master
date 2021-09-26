@@ -139,7 +139,7 @@ public class DuckOp extends LinearOpMode {
          * but differ in their instance id information.
          * @see VuMarkInstanceId
          */
-        VuforiaTrackables duckTrackables = this.vuforia.loadTrackablesFromAsset("/Users/kfareed24/Documents/GitHub/FtcRobotController-master/FtcRobotController/src/main/assets/duck1.xml");
+        VuforiaTrackables duckTrackables = this.vuforia.loadTrackablesFromAsset("duck1");
         VuforiaTrackable duckTrackable = duckTrackables.get(0);
         duckTrackable.setName("duckTemplate"); // can help in debugging; otherwise not necessary
 
