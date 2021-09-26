@@ -170,7 +170,7 @@ public class VuforiaOp extends LinearOpMode {
                     telemetry.addData("RX", rX);
                     telemetry.addData("RY", rY);
                     telemetry.addData("RZ", rZ);
-                    if (tZ > 600) {
+                    if (tZ > 600 && !rotated) {
                         telemetry.addData("Status", "Moving towards VuMark");
                         if (backLeft.getPower() == 0) {
                             backLeft.setPower(-0.5);
@@ -178,6 +178,12 @@ public class VuforiaOp extends LinearOpMode {
                             frontLeft.setPower(-0.5);
                             frontRight.setPower(-0.5);
                         }
+                    }
+                    else if (rotated && tZ > 350) {
+                        backLeft.setPower(-0.5);
+                        backRight.setPower(-0.5);
+                        frontLeft.setPower(-0.5);
+                        frontRight.setPower(-0.5);
                     }
                     else {
                         telemetry.addData("Status", "Arrived");
@@ -203,20 +209,7 @@ public class VuforiaOp extends LinearOpMode {
                                         backRight.setPower(0);
                                         frontLeft.setPower(0);
                                         frontRight.setPower(0);
-                                        while (tZ > 350)
-                                        {
-                                            pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getFtcCameraFromTarget();
-                                            trans = pose.getTranslation();
-                                            tZ = trans.get(2);
-                                            backLeft.setPower(-0.5);
-                                            backRight.setPower(-0.5);
-                                            frontLeft.setPower(-0.5);
-                                            frontRight.setPower(-0.5);
-                                        }
-                                        backLeft.setPower(0);
-                                        backRight.setPower(0);
-                                        frontLeft.setPower(0);
-                                        frontRight.setPower(0);
+                                        rotated = true;
                                     }
                                 }
                             } else {
@@ -239,20 +232,7 @@ public class VuforiaOp extends LinearOpMode {
                                     backLeft.setPower(0.5);
                                     frontRight.setPower(-0.5);
                                     frontLeft.setPower(0.5);
-                                    while (tZ > 350)
-                                    {
-                                        pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getFtcCameraFromTarget();
-                                        trans = pose.getTranslation();
-                                        tZ = trans.get(2);
-                                        backLeft.setPower(-0.5);
-                                        backRight.setPower(-0.5);
-                                        frontLeft.setPower(-0.5);
-                                        frontRight.setPower(-0.5);
-                                    }
-                                    backLeft.setPower(0);
-                                    backRight.setPower(0);
-                                    frontLeft.setPower(0);
-                                    frontRight.setPower(0);
+                                    rotated = true;
                                 }
                                 else
                                 {
