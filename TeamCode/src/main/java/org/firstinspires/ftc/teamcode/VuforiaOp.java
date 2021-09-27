@@ -1,72 +1,246 @@
+/* Copyright (c) 2017 FIRST. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted (subject to the limitations in the disclaimer below) provided that
+ * the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this list
+ * of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * promote products derived from this software without specific prior written permission.
+ *
+ * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
+ * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Bitmap;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.vuforia.HINT;
-import com.vuforia.Matrix34F;
-import com.vuforia.Tool;
-import com.vuforia.Vec2F;
-import com.vuforia.Vec3F;
-import com.vuforia.Vuforia;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigationWebcam;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaTrackableContainer;
 
-import java.util.Arrays;
 
-@Autonomous
+@TeleOp(name="WebCam ID", group ="Concept")
 public class VuforiaOp extends LinearOpMode {
-    @Override
-    public void runOpMode() throws InterruptedException {
-        VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-        params.vuforiaLicenseKey = "FTC10237";
-        params.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
-        VuforiaLocalizerImplSubclass vuforia = new VuforiaLocalizerImplSubclass(params);
-        Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
-        VuforiaTrackables beacons = vuforia.loadTrackablesFromAsset("FTC_2016-17");
-        beacons.get(0).setName("Wheels");
-        beacons.get(1).setName("Tools");
-        beacons.get(2).setName("Lego");
-        beacons.get(3).setName("Gears");
 
+    public static final String TAG = "Vuforia VuMark Sample";
+
+    OpenGLMatrix lastLocation = null;
+
+
+    VuforiaLocalizer vuforia;
+
+
+    WebcamName webcamName;
+    float error_range = 10;
+    @Override public void runOpMode() {
+        DcMotor frontLeft  = hardwareMap.get(DcMotor .class, "frontLeft");
+        DcMotor backLeft = hardwareMap.get(DcMotor.class, "backLeft");
+        DcMotor frontRight  = hardwareMap.get(DcMotor.class, "frontRight");
+        DcMotor backRight = hardwareMap.get(DcMotor.class, "backRight");
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        webcamName = hardwareMap.get(WebcamName.class, "frontCamera");
+
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+
+        parameters.vuforiaLicenseKey = "ATsWqNz/////AAABmWYRlY7DGU8dtTwW/Yw4PNtPvPXxTdmekWVEYn733h49VAyjzQnsW1TZ+VVTaO7AekdQGZr/KSuDrOw9AI68/uRoZsF1ukki/sKQE/vKPKvK0mOz3l0KfdFiuSKRXZHVlvGdDok1elfQEkFndz/I3GgTFLD6JNBONF5M4khp36vjBP2a/IPvQsefLMDwrvNirNfPMYnRKHH6+d8z3sbWBwfQp7i1c5l0hgcljwPT1Qq1dzYufmsFmvqsioIcZH0G1TuWWHxnBvrpN9/l4dV8gxA6+XdaAiABeiU7d+tzzUMuoLHt9iUW98+/mG4RqpecRTyMnk+ne5LXpyWfXdXsaTInZ7yh2/QaWgUDDfktkWuK";
+
+        parameters.cameraName = webcamName;
+        this.vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        boolean rotated = false;
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+
+        telemetry.addData(">", "Press Play to start");
+        telemetry.update();
         waitForStart();
 
-        beacons.activate();
+        relicTrackables.activate();
 
-        while(opModeIsActive())
-        {
-            if (vuforia.rgb != null)
-            {
-                Bitmap bm = Bitmap.createBitmap(vuforia.rgb.getWidth(), vuforia.rgb.getHeight(), Bitmap.Config.RGB_565);
-                bm.copyPixelsFromBuffer(vuforia.rgb.getPixels());
-                vuforia.getFrameQueue().take().getImage(1);
+        while (opModeIsActive()) {
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
-            }
+                telemetry.addData("VuMark", "%s visible", vuMark);
 
-            for (VuforiaTrackable beac : beacons)
-            {
-                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beac.getListener()).getRawPose();
 
-                if (pose != null)
-                {
-                    Matrix34F rawPose = new Matrix34F();
-                    float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
-                    rawPose.setData(poseData);
+                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getFtcCameraFromTarget();
 
-                    Vec2F upperLeft = Tool.projectPoint(com.vuforia.CameraDevice.getInstance().getCameraCalibration(), rawPose, new Vec3F(-127, 92, 0));
-                    Vec2F upperRight = Tool.projectPoint(com.vuforia.CameraDevice.getInstance().getCameraCalibration(), rawPose, new Vec3F(127, 92, 0));
-                    Vec2F lowerRight = Tool.projectPoint(com.vuforia.CameraDevice.getInstance().getCameraCalibration(), rawPose, new Vec3F(127, -92, 0));
-                    Vec2F lowerLeft = Tool.projectPoint(com.vuforia.CameraDevice.getInstance().getCameraCalibration(), rawPose, new Vec3F(-127, -92, 0));
+                if (pose != null) {
+                    VectorF trans = pose.getTranslation();
+                    Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+
+                    double tX = trans.get(0);
+                    double tY = trans.get(1);
+                    double tZ = trans.get(2);
+
+                    double rX = rot.firstAngle;
+                    double rY = rot.secondAngle;
+                    double rZ = rot.thirdAngle;
+                    telemetry.addData("TX", tX);
+                    telemetry.addData("TY", tY);
+                    telemetry.addData("TZ", tZ);
+                    telemetry.addData("RX", rX);
+                    telemetry.addData("RY", rY);
+                    telemetry.addData("RZ", rZ);
+                    if (tZ > 600 && !rotated) {
+                        telemetry.addData("Status", "Moving towards VuMark");
+                        if (backLeft.getPower() == 0) {
+                            backLeft.setPower(-0.5);
+                            backRight.setPower(-0.5);
+                            frontLeft.setPower(-0.5);
+                            frontRight.setPower(-0.5);
+                        }
+                    }
+                    else if (rotated && tZ > 350) {
+                        backLeft.setPower(-0.5);
+                        backRight.setPower(-0.5);
+                        frontLeft.setPower(-0.5);
+                        frontRight.setPower(-0.5);
+                    }
+                    else {
+                        telemetry.addData("Status", "Arrived");
+                        if (Math.abs(backLeft.getPower()) > 0) {
+                            backLeft.setPower(0);
+                            backRight.setPower(0);
+                            frontLeft.setPower(0);
+                            frontRight.setPower(0);
+                        }
+                    }
+                    if (rY != 0) {
+                        if (rY > 0) {
+                            if ((180 - rY) > 0) {
+                                if ((180 - rY) > error_range) {
+                                    telemetry.addData("Status", "Rotating right");
+                                    backLeft.setPower(-0.5);
+                                    backRight.setPower(0.5);
+                                    frontLeft.setPower(-0.5);
+                                    frontRight.setPower(0.5);
+                                } else {
+                                    if (Math.abs(backLeft.getPower()) > 0) {
+                                        backLeft.setPower(0);
+                                        backRight.setPower(0);
+                                        frontLeft.setPower(0);
+                                        frontRight.setPower(0);
+                                        rotated = true;
+                                    }
+                                }
+                            } else {
+                                if (Math.abs(backLeft.getPower()) > 0) {
+                                    backLeft.setPower(0);
+                                    backRight.setPower(0);
+                                    frontLeft.setPower(0);
+                                    frontRight.setPower(0);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if ((180 - Math.abs(rY)) > 0)
+                            {
+                                if ((180 - Math.abs(rY)) > error_range)
+                                {
+                                    telemetry.addData("Status", "Rotating left");
+                                    backRight.setPower(-0.5);
+                                    backLeft.setPower(0.5);
+                                    frontRight.setPower(-0.5);
+                                    frontLeft.setPower(0.5);
+                                    rotated = true;
+                                }
+                                else
+                                {
+                                    if (Math.abs(backLeft.getPower()) > 0) {
+                                        backLeft.setPower(0);
+                                        backRight.setPower(0);
+                                        frontLeft.setPower(0);
+                                        frontRight.setPower(0);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (Math.abs(backLeft.getPower()) > 0) {
+                                    backLeft.setPower(0);
+                                    backRight.setPower(0);
+                                    frontLeft.setPower(0);
+                                    frontRight.setPower(0);
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    if (Math.abs(backLeft.getPower()) > 0) {
+                        backLeft.setPower(0);
+                        backRight.setPower(0);
+                        frontLeft.setPower(0);
+                        frontRight.setPower(0);
+                    }
                 }
             }
+            else {
+                telemetry.addData("VuMark", "not visible");
+                telemetry.addData("State", "Locating VuMark");
+                if (backLeft.getPower() > 0)
+                {
+                    backLeft.setPower(0.1);
+                    backRight.setPower(-0.1);
+                    frontLeft.setPower(0.1);
+                    frontRight.setPower(-0.1);
+                }
+                else if (backLeft.getPower() < 0 || backLeft.getPower() == 0)
+                {
+                    backLeft.setPower(-0.1);
+                    backRight.setPower(0.1);
+                    frontLeft.setPower(-0.1);
+                    frontRight.setPower(0.1);
+                }
+            }
+
             telemetry.update();
         }
+    }
+
+    String format(OpenGLMatrix transformationMatrix) {
+        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 }
