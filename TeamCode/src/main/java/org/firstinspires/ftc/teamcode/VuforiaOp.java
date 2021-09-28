@@ -106,11 +106,11 @@ public class VuforiaOp extends LinearOpMode {
                 if (pose != null) {
                     VectorF trans = pose.getTranslation();
                     Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-
+                    //Get transform
                     double tX = trans.get(0);
                     double tY = trans.get(1);
                     double tZ = trans.get(2);
-
+                    //Get rotation
                     double rX = rot.firstAngle;
                     double rY = rot.secondAngle;
                     double rZ = rot.thirdAngle;
@@ -120,7 +120,8 @@ public class VuforiaOp extends LinearOpMode {
                     telemetry.addData("RX", rX);
                     telemetry.addData("RY", rY);
                     telemetry.addData("RZ", rZ);
-                    if (tZ > 600 && !rotated) {
+                    //Check if you're far away
+                    if (tZ > 600) {
                         telemetry.addData("Status", "Moving towards VuMark");
                         if (backLeft.getPower() == 0) {
                             backLeft.setPower(-0.5);
@@ -129,12 +130,14 @@ public class VuforiaOp extends LinearOpMode {
                             frontRight.setPower(-0.5);
                         }
                     }
+                    //If you're aligned but not close enough
                     else if (rotated && tZ > 350) {
                         backLeft.setPower(-0.5);
                         backRight.setPower(-0.5);
                         frontLeft.setPower(-0.5);
                         frontRight.setPower(-0.5);
                     }
+                    //If you've reached the final parked position
                     else {
                         telemetry.addData("Status", "Arrived");
                         if (Math.abs(backLeft.getPower()) > 0) {
@@ -144,7 +147,9 @@ public class VuforiaOp extends LinearOpMode {
                             frontRight.setPower(0);
                         }
                     }
+                    //If you aren't perfectly straight
                     if (rY != 0) {
+                        //Determine which direction
                         if (rY > 0) {
                             if ((180 - rY) > 0) {
                                 if ((180 - rY) > error_range) {
