@@ -43,10 +43,12 @@ public class TeleOpV2 extends LinearOpMode {
             frontRight.setPower(right_targetPower);
             flywheel.setPower(flywheel_power);
             intake.setPower(intake_power);
-            if (gamepad1.y) {
+            if (gamepad1.y)
+            {
                 flywheel_power = 0.2;
             }
-            else {
+            else
+            {
                 flywheel_power = 0;
             }
             if (gamepad1.left_bumper)

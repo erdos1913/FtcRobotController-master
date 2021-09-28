@@ -68,8 +68,8 @@ public class VuforiaOp extends LinearOpMode {
         DcMotor backRight = hardwareMap.get(DcMotor.class, "backRight");
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
 
         webcamName = hardwareMap.get(WebcamName.class, "frontCamera");
 
