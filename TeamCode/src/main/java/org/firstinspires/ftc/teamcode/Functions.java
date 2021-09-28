@@ -6,10 +6,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public class Functions {
-    static void initialize(DcMotor lift, Servo trigger, DcMotor flywheel, TouchSensor bottom) {
+    static void initialize(DcMotor lift, Servo trigger, DcMotor flywheel, TouchSensor bottom, DcMotor intake) {
         flywheel.setPower(0);
         trigger.setPosition(0.8);
         lift.setPower(1);
+        intake.setPower(0);
         while (!bottom.isPressed())
         {
             ;

@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 @TeleOp(name="TeleOpV2", group ="Test")
 public class TeleOpV2 extends LinearOpMode {
@@ -17,6 +19,10 @@ public class TeleOpV2 extends LinearOpMode {
         DcMotor backRight = hardwareMap.get(DcMotor.class, "frontRight");
         DcMotor flywheel = hardwareMap.get(DcMotor.class, "flywheel");
         DcMotor intake = hardwareMap.get(DcMotor.class, "intake");
+        Servo trigger = hardwareMap.get(Servo.class, "trigger");
+        DcMotor lift = hardwareMap.get(DcMotor.class, "lift");
+        TouchSensor bottomTouch = hardwareMap.get(TouchSensor.class, "sensorBottom");
+        TouchSensor topTouch = hardwareMap.get(TouchSensor.class, "sensorTop");
         double flywheel_power = 0;
         double left_targetPower = 0;
         double right_targetPower = 0;
@@ -50,6 +56,14 @@ public class TeleOpV2 extends LinearOpMode {
             else
             {
                 intake_power = 0;
+            }
+            if (gamepad1.x)
+            {
+                Functions.initialize(lift, trigger, flywheel, bottomTouch, intake);
+            }
+            if (gamepad1.b)
+            {
+                Functions.launch_ring(trigger, lift, flywheel, 0.2, topTouch);
             }
 
         }

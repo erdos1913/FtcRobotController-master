@@ -72,7 +72,7 @@ public class TestAuto extends LinearOpMode {
                 telemetry.addData("Pressed", "True");
             }
             if (gamepad1.x){
-                Functions.initialize(lift, trigger, flywheel, bottomTouch);
+                Functions.initialize(lift, trigger, flywheel, bottomTouch, intake);
             }
             else if (gamepad1.a) {
                 //Ready the trigger

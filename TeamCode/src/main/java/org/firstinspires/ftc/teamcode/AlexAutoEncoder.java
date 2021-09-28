@@ -65,7 +65,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="AlexAutoEncoder", group="Pushbot")
 public class AlexAutoEncoder extends LinearOpMode {
-
+    DcMotor intake = hardwareMap.get(DcMotor.class, "intake");
     /* Declare OpMode members. */
     HardwareRobot         robot   = new HardwareRobot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
@@ -137,7 +137,7 @@ public class AlexAutoEncoder extends LinearOpMode {
                 robot.flywheel.setPower(0);
             }
             if(gamepad1.left_bumper) {
-                Functions.initialize(robot.lift, robot.trigger, robot.flywheel, robot.bottom);
+                Functions.initialize(robot.lift, robot.trigger, robot.flywheel, robot.bottom, intake);
             }
             if(gamepad1.dpad_down) {
                 robot.flywheel.setPower(0.8);
