@@ -16,9 +16,11 @@ public class TeleOpV2 extends LinearOpMode {
         DcMotor backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         DcMotor backRight = hardwareMap.get(DcMotor.class, "frontRight");
         DcMotor flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+        DcMotor intake = hardwareMap.get(DcMotor.class, "intake");
         double flywheel_power = 0;
         double left_targetPower = 0;
         double right_targetPower = 0;
+        double intake_power = 0;
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -34,12 +36,22 @@ public class TeleOpV2 extends LinearOpMode {
             backRight.setPower(right_targetPower);
             frontRight.setPower(right_targetPower);
             flywheel.setPower(flywheel_power);
+            intake.setPower(intake_power);
             if (gamepad1.y) {
                 flywheel_power = 0.2;
             }
             else {
                 flywheel_power = 0;
             }
+            if (gamepad1.left_bumper)
+            {
+                intake_power = 1;
+            }
+            else
+            {
+                intake_power = 0;
+            }
+
         }
     }
 }

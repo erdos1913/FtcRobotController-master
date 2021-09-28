@@ -69,8 +69,7 @@ public class DuckOp extends LinearOpMode {
      * Once you've obtained a license key, copy the string from the Vuforia web site
      * and paste it in to your code on the next line, between the double quotes.
      */
-    private static final String VUFORIA_KEY =
-            "ATsWqNz/////AAABmWYRlY7DGU8dtTwW/Yw4PNtPvPXxTdmekWVEYn733h49VAyjzQnsW1TZ+VVTaO7AekdQGZr/KSuDrOw9AI68/uRoZsF1ukki/sKQE/vKPKvK0mOz3l0KfdFiuSKRXZHVlvGdDok1elfQEkFndz/I3GgTFLD6JNBONF5M4khp36vjBP2a/IPvQsefLMDwrvNirNfPMYnRKHH6+d8z3sbWBwfQp7i1c5l0hgcljwPT1Qq1dzYufmsFmvqsioIcZH0G1TuWWHxnBvrpN9/l4dV8gxA6+XdaAiABeiU7d+tzzUMuoLHt9iUW98+/mG4RqpecRTyMnk+ne5LXpyWfXdXsaTInZ7yh2/QaWgUDDfktkWuK";
+    private static final String VUFORIA_KEY = "ATsWqNz/////AAABmWYRlY7DGU8dtTwW/Yw4PNtPvPXxTdmekWVEYn733h49VAyjzQnsW1TZ+VVTaO7AekdQGZr/KSuDrOw9AI68/uRoZsF1ukki/sKQE/vKPKvK0mOz3l0KfdFiuSKRXZHVlvGdDok1elfQEkFndz/I3GgTFLD6JNBONF5M4khp36vjBP2a/IPvQsefLMDwrvNirNfPMYnRKHH6+d8z3sbWBwfQp7i1c5l0hgcljwPT1Qq1dzYufmsFmvqsioIcZH0G1TuWWHxnBvrpN9/l4dV8gxA6+XdaAiABeiU7d+tzzUMuoLHt9iUW98+/mG4RqpecRTyMnk+ne5LXpyWfXdXsaTInZ7yh2/QaWgUDDfktkWuK";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
