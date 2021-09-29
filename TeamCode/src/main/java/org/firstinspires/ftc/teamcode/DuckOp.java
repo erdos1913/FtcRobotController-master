@@ -55,7 +55,7 @@ public class DuckOp extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "model_unquant.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Duck";
     private static final String LABEL_SECOND_ELEMENT = "Cube";
-    private static final String LABEL_Third_ELEMENT = "Ball";
+    private static final String LABEL_THIRD_ELEMENT = "Ball";
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -167,6 +167,6 @@ public class DuckOp extends LinearOpMode {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.8f;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT, LABEL_Third_ELEMENT);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT, LABEL_THIRD_ELEMENT);
     }
 }
