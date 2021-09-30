@@ -10,8 +10,15 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
 
@@ -38,6 +45,7 @@ public class FreightFrenzy_Auto extends OpMode {
     BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
     boolean rotated = false;
+    boolean arrived = false;
 
     int stage = 1;
     @Override
@@ -84,7 +92,165 @@ public class FreightFrenzy_Auto extends OpMode {
                 VuforiaTrackable relicTemplate = relicTrackables.get(0);
                 relicTemplate.setName("relicVuMarkTemplate");
                 relicTrackables.activate();
-                Functions.park(relicTemplate, frontRight, frontLeft, backLeft, backRight, error_range);
+                while (!arrived)
+                {
+                    RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                    if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+
+                        telemetry.addData("VuMark", "%s visible", vuMark);
+
+
+                        OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getFtcCameraFromTarget();
+
+                        if (pose != null) {
+                            VectorF trans = pose.getTranslation();
+                            Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+                            //Get transform
+                            double tX = trans.get(0);
+                            double tY = trans.get(1);
+                            double tZ = trans.get(2);
+                            //Get rotation
+                            double rX = rot.firstAngle;
+                            double rY = rot.secondAngle;
+                            double rZ = rot.thirdAngle;
+                            telemetry.addData("TX", tX);
+                            telemetry.addData("TY", tY);
+                            telemetry.addData("TZ", tZ);
+                            telemetry.addData("RX", rX);
+                            telemetry.addData("RY", rY);
+                            telemetry.addData("RZ", rZ);
+                            //Check if you're far away
+                            if (tZ > 600) {
+                                telemetry.addData("Status", "Moving towards VuMark");
+                                if (backLeft.getPower() == 0) {
+                                    backLeft.setPower(-0.7);
+                                    backRight.setPower(-0.7);
+                                    frontLeft.setPower(-0.7);
+                                    frontRight.setPower(-0.7);
+                                }
+                            }
+                            else if (tZ > 200)
+                            {
+                                if (rotated) {
+                                    backLeft.setPower(-0.7);
+                                    backRight.setPower(-0.7);
+                                    frontLeft.setPower(-0.7);
+                                    frontRight.setPower(-0.7);
+                                }
+                                else if (Math.abs(backLeft.getPower()) > 0) {
+                                    backLeft.setPower(0);
+                                    backRight.setPower(0);
+                                    frontLeft.setPower(0);
+                                    frontRight.setPower(0);
+                                }
+                            }
+                            //If you've reached the final parked position
+                            else {
+                                telemetry.addData("Status", "Arrived");
+                                if (Math.abs(backLeft.getPower()) > 0) {
+                                    backLeft.setPower(0);
+                                    backRight.setPower(0);
+                                    frontLeft.setPower(0);
+                                    frontRight.setPower(0);
+                                }
+                            }
+                            //If you aren't perfectly straight
+                            if (rY != 0) {
+                                //Determine which direction
+                                if (rY > 0) {
+                                    if ((180 - rY) > 0) {
+                                        if ((180 - rY) > error_range) {
+                                            telemetry.addData("Status", "Rotating right");
+                                            backLeft.setPower(-0.7);
+                                            backRight.setPower(0.7);
+                                            frontLeft.setPower(-0.7);
+                                            frontRight.setPower(0.7);
+                                        } else {
+                                            if (Math.abs(backLeft.getPower()) > 0) {
+                                                backLeft.setPower(0);
+                                                backRight.setPower(0);
+                                                frontLeft.setPower(0);
+                                                frontRight.setPower(0);
+                                                rotated = true;
+                                            }
+                                        }
+                                    } else {
+                                        if (Math.abs(backLeft.getPower()) > 0) {
+                                            rotated = true;
+                                            backLeft.setPower(0);
+                                            backRight.setPower(0);
+                                            frontLeft.setPower(0);
+                                            frontRight.setPower(0);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if ((180 - Math.abs(rY)) > 0)
+                                    {
+                                        if ((180 - Math.abs(rY)) > error_range)
+                                        {
+                                            telemetry.addData("Status", "Rotating left");
+                                            backRight.setPower(-0.7);
+                                            backLeft.setPower(0.7);
+                                            frontRight.setPower(-0.7);
+                                            frontLeft.setPower(0.7);
+                                            rotated = true;
+                                        }
+                                        else
+                                        {
+                                            if (Math.abs(backLeft.getPower()) > 0) {
+                                                rotated = true;
+                                                backLeft.setPower(0);
+                                                backRight.setPower(0);
+                                                frontLeft.setPower(0);
+                                                frontRight.setPower(0);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Math.abs(backLeft.getPower()) > 0) {
+                                            rotated = true;
+                                            backLeft.setPower(0);
+                                            backRight.setPower(0);
+                                            frontLeft.setPower(0);
+                                            frontRight.setPower(0);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            if (Math.abs(backLeft.getPower()) > 0) {
+                                backLeft.setPower(0);
+                                backRight.setPower(0);
+                                frontLeft.setPower(0);
+                                frontRight.setPower(0);
+                            }
+                        }
+                    }
+                    else {
+                        telemetry.addData("VuMark", "not visible");
+                        telemetry.addData("State", "Locating VuMark");
+                        if (backLeft.getPower() > 0)
+                        {
+                            backLeft.setPower(0.3);
+                            backRight.setPower(-0.3);
+                            frontLeft.setPower(0.3);
+                            frontRight.setPower(-0.3);
+                        }
+                        else if (backLeft.getPower() < 0 || backLeft.getPower() == 0)
+                        {
+                            backLeft.setPower(-0.3);
+                            backRight.setPower(0.3);
+                            frontLeft.setPower(-0.3);
+                            frontRight.setPower(0.3);
+                        }
+                    }
+
+                    telemetry.update();
+                }
                 break;
         }
     }

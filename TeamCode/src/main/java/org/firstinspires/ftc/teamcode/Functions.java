@@ -87,7 +87,7 @@ public class Functions {
     }
     static void park(VuforiaTrackable relicTemplate, DcMotor frontRight, DcMotor frontLeft, DcMotor backLeft, DcMotor backRight, float error_range)
     {
-        boolean rotated;
+        boolean rotated = false;
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
         if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
