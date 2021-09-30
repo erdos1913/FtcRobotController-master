@@ -116,6 +116,10 @@ public class AlexAutoEncoder extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
 
 
+//        encoderDrive(DRIVE_SPEED,  -24,  -24, 5.0);
+//        encoderDrive(TURN_SPEED, -12, 12, 4.0); //90?
+//        encoderDrive(DRIVE_SPEED,  -24,  -24, 5.0);
+
         while(opModeIsActive()) {
             if(gamepad1.a) {
                 //encoderDrive(DRIVE_SPEED,  -24,  -24, 5.0);

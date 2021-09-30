@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -60,7 +61,9 @@ public class HardwareRobot
     public DcMotor  backRight   = null;
     public DcMotor  flywheel    = null;
     public DcMotor  lift        = null;
+    public DcMotor  arm         = null;
     public Servo    trigger     = null;
+    public Servo    grabber     = null;
     public TouchSensor bottom   = null;
     public TouchSensor top      = null;
 
@@ -93,7 +96,9 @@ public class HardwareRobot
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         flywheel = hardwareMap.get(DcMotor.class, "flywheel");
         lift = hardwareMap.get(DcMotor.class, "lift");
+        lift = hardwareMap.get(DcMotor.class, "arm");
         trigger = hardwareMap.get(Servo.class, "trigger");
+        grabber = hardwareMap.get(Servo.class, "grabber");
         bottom = hardwareMap.get(TouchSensor.class, "sensorBottom");
         top = hardwareMap.get(TouchSensor.class, "sensorTop");
 
@@ -105,6 +110,7 @@ public class HardwareRobot
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.REVERSE);
         flywheel.setDirection(DcMotor.Direction.FORWARD);
+        arm.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set all motors to zero power
         frontLeft.setPower(0);
@@ -112,6 +118,7 @@ public class HardwareRobot
         backLeft.setPower(0);
         backRight.setPower(0);
         flywheel.setPower(0);
+        arm.setPower(0);
 
         //leftArm.setPower(0);
 
@@ -122,10 +129,13 @@ public class HardwareRobot
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Define and initialize ALL installed servos.
+
+        grabber.setPosition(0);
 
 //        leftClaw  = hwMap.get(Servo.class, "left_hand");
 //        rightClaw = hwMap.get(Servo.class, "right_hand");
