@@ -65,7 +65,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="AlexAutoEncoder", group="Pushbot")
 public class AlexAutoEncoder extends LinearOpMode {
-    DcMotor intake = hardwareMap.get(DcMotor.class, "intake");
+//    DcMotor intake = hardwareMap.get(DcMotor.class, "intake");
     /* Declare OpMode members. */
     HardwareRobot         robot   = new HardwareRobot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
@@ -122,6 +122,8 @@ public class AlexAutoEncoder extends LinearOpMode {
 //        encoderDrive(DRIVE_SPEED,  -24,  -24, 5.0);
 //        encoderDrive(TURN_SPEED, -12, 12, 4.0); //90?
 //        encoderDrive(DRIVE_SPEED,  -24,  -24, 5.0);
+//        encoderDrive(TURN_SPEED, -23, 23, 4.0);
+//        encoderDrive(DRIVE_SPEED, -48, -48, 5.0);
 
         while(opModeIsActive()) {
             if(gamepad1.a) {
@@ -144,13 +146,22 @@ public class AlexAutoEncoder extends LinearOpMode {
                 robot.flywheel.setPower(0);
             }
             if(gamepad1.left_bumper) {
-                Functions.initialize(robot.lift, robot.trigger, robot.flywheel, robot.bottom, intake);
+//                Functions.initialize(robot.lift, robot.trigger, robot.flywheel, robot.bottom);
             }
             if(gamepad1.dpad_left) {
                 robot.flywheel.setPower(0.3);
             }
             if(gamepad1.left_stick_y != 0) {
-                robot.arm.setPower(gamepad1.left_stick_y);
+                if(gamepad1.left_stick_y > 0.5) {
+                    robot.arm.setPower(0.1);
+                }
+                else if(gamepad1.left_stick_y < -0.5) {
+                    robot.arm.setPower(-0.1);
+                }
+                else{
+                    robot.arm.setPower(0);
+                }
+
             }
             if(gamepad1.dpad_up) {
                 robot.grabber.setPosition(1);
@@ -158,6 +169,8 @@ public class AlexAutoEncoder extends LinearOpMode {
             if(gamepad1.dpad_down) {
                 robot.grabber.setPosition(0);
             }
+            telemetry.addData("Arm Position: ", robot.arm.getCurrentPosition());
+            telemetry.update();
         }
 
           // S1: Forward 24 Inches with 5 Sec timeout
@@ -177,6 +190,11 @@ public class AlexAutoEncoder extends LinearOpMode {
 
     }
 
+
+
+//    public void dropCube() {
+//        robot.arm.setTargetPosition();
+//    }
     /*
      *  Method to perform a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.

@@ -96,7 +96,7 @@ public class HardwareRobot
         backRight = hardwareMap.get(DcMotor.class, "backRight");
         flywheel = hardwareMap.get(DcMotor.class, "flywheel");
         lift = hardwareMap.get(DcMotor.class, "lift");
-        lift = hardwareMap.get(DcMotor.class, "arm");
+        arm = hardwareMap.get(DcMotor.class, "arm");
         trigger = hardwareMap.get(Servo.class, "trigger");
         grabber = hardwareMap.get(Servo.class, "grabber");
         bottom = hardwareMap.get(TouchSensor.class, "sensorBottom");
@@ -110,7 +110,7 @@ public class HardwareRobot
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.REVERSE);
         flywheel.setDirection(DcMotor.Direction.FORWARD);
-        arm.setDirection(DcMotorSimple.Direction.FORWARD);
+        arm.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         frontLeft.setPower(0);
@@ -135,7 +135,7 @@ public class HardwareRobot
 
         // Define and initialize ALL installed servos.
 
-        grabber.setPosition(0);
+//        grabber.setPosition(0);
 
 //        leftClaw  = hwMap.get(Servo.class, "left_hand");
 //        rightClaw = hwMap.get(Servo.class, "right_hand");
