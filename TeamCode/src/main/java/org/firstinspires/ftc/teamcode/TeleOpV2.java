@@ -35,37 +35,79 @@ public class TeleOpV2 extends LinearOpMode {
 
         while (opModeIsActive())
         {
-            left_targetPower = gamepad1.right_stick_y;
-            right_targetPower = gamepad1.left_stick_y;
             frontLeft.setPower(left_targetPower);
             backLeft.setPower(left_targetPower);
             backRight.setPower(right_targetPower);
             frontRight.setPower(right_targetPower);
             flywheel.setPower(flywheel_power);
             intake.setPower(intake_power);
-            if (gamepad1.y)
+            //Move mechanism (Just experiment, it should be simple)
+            if (gamepad1.right_stick_y > 0)
             {
-                flywheel_power = 0.2;
+                if (gamepad1.left_stick_x == 0)
+                {
+                    left_targetPower = gamepad1.left_stick_y;
+                    right_targetPower = gamepad1.left_stick_y;
+                }
+                else
+                {
+                    right_targetPower = gamepad1.left_stick_y * -1;
+                    left_targetPower = gamepad1.left_stick_y;
+                }
             }
-            else
+            else if (gamepad1.right_stick_y < 0)
             {
-                flywheel_power = 0;
+                if (gamepad1.left_stick_x == 0)
+                {
+                    left_targetPower = gamepad1.left_stick_y;
+                    right_targetPower = gamepad1.left_stick_y;
+                }
+                else
+                {
+                    right_targetPower = gamepad1.left_stick_y;
+                    left_targetPower = gamepad1.left_stick_y * -1;
+                }
             }
+            //Spin flywheel left
             if (gamepad1.left_bumper)
             {
-                intake_power = 1;
+                if (flywheel.getPower() == 0.4) {
+                    flywheel_power = 0;
+                }
+                else {
+                    flywheel_power = 0.4;
+                }
             }
-            else
+            //Spin flywheel right
+            else if (gamepad1.right_bumper)
             {
-                intake_power = 0;
+                if (flywheel.getPower() == -0.4) {
+                    flywheel_power = 0;
+                }
+                else {
+                    flywheel_power = -0.4;
+                }
             }
+            //Start intake
+            if (gamepad1.y)
+            {
+                if (intake.getPower() > 0)
+                {
+                    intake_power = 0;
+                }
+                else {
+                    intake_power = 1;
+                }
+            }
+            //Init
             if (gamepad1.x)
             {
                 Functions.initialize(lift, trigger, flywheel, bottomTouch, intake);
             }
+            //Launch but start intake first
             if (gamepad1.b)
             {
-                Functions.launch_ring(trigger, lift, flywheel, 0.2, topTouch);
+                Functions.launch_ring(trigger, lift, flywheel, 0.35, topTouch);
             }
 
         }

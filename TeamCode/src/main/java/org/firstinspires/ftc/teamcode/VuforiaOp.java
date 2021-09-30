@@ -124,18 +124,26 @@ public class VuforiaOp extends LinearOpMode {
                     if (tZ > 600) {
                         telemetry.addData("Status", "Moving towards VuMark");
                         if (backLeft.getPower() == 0) {
-                            backLeft.setPower(-0.5);
-                            backRight.setPower(-0.5);
-                            frontLeft.setPower(-0.5);
-                            frontRight.setPower(-0.5);
+                            backLeft.setPower(-0.7);
+                            backRight.setPower(-0.7);
+                            frontLeft.setPower(-0.7);
+                            frontRight.setPower(-0.7);
                         }
                     }
-                    //If you're aligned but not close enough
-                    else if (rotated && tZ > 350) {
-                        backLeft.setPower(-0.5);
-                        backRight.setPower(-0.5);
-                        frontLeft.setPower(-0.5);
-                        frontRight.setPower(-0.5);
+                    else if (tZ > 200)
+                    {
+                        if (rotated) {
+                            backLeft.setPower(-0.7);
+                            backRight.setPower(-0.7);
+                            frontLeft.setPower(-0.7);
+                            frontRight.setPower(-0.7);
+                        }
+                        else if (Math.abs(backLeft.getPower()) > 0) {
+                            backLeft.setPower(0);
+                            backRight.setPower(0);
+                            frontLeft.setPower(0);
+                            frontRight.setPower(0);
+                        }
                     }
                     //If you've reached the final parked position
                     else {
@@ -154,10 +162,10 @@ public class VuforiaOp extends LinearOpMode {
                             if ((180 - rY) > 0) {
                                 if ((180 - rY) > error_range) {
                                     telemetry.addData("Status", "Rotating right");
-                                    backLeft.setPower(-0.5);
-                                    backRight.setPower(0.5);
-                                    frontLeft.setPower(-0.5);
-                                    frontRight.setPower(0.5);
+                                    backLeft.setPower(-0.7);
+                                    backRight.setPower(0.7);
+                                    frontLeft.setPower(-0.7);
+                                    frontRight.setPower(0.7);
                                 } else {
                                     if (Math.abs(backLeft.getPower()) > 0) {
                                         backLeft.setPower(0);
@@ -169,6 +177,7 @@ public class VuforiaOp extends LinearOpMode {
                                 }
                             } else {
                                 if (Math.abs(backLeft.getPower()) > 0) {
+                                    rotated = true;
                                     backLeft.setPower(0);
                                     backRight.setPower(0);
                                     frontLeft.setPower(0);
@@ -183,15 +192,16 @@ public class VuforiaOp extends LinearOpMode {
                                 if ((180 - Math.abs(rY)) > error_range)
                                 {
                                     telemetry.addData("Status", "Rotating left");
-                                    backRight.setPower(-0.5);
-                                    backLeft.setPower(0.5);
-                                    frontRight.setPower(-0.5);
-                                    frontLeft.setPower(0.5);
+                                    backRight.setPower(-0.7);
+                                    backLeft.setPower(0.7);
+                                    frontRight.setPower(-0.7);
+                                    frontLeft.setPower(0.7);
                                     rotated = true;
                                 }
                                 else
                                 {
                                     if (Math.abs(backLeft.getPower()) > 0) {
+                                        rotated = true;
                                         backLeft.setPower(0);
                                         backRight.setPower(0);
                                         frontLeft.setPower(0);
@@ -202,6 +212,7 @@ public class VuforiaOp extends LinearOpMode {
                             else
                             {
                                 if (Math.abs(backLeft.getPower()) > 0) {
+                                    rotated = true;
                                     backLeft.setPower(0);
                                     backRight.setPower(0);
                                     frontLeft.setPower(0);
@@ -225,17 +236,17 @@ public class VuforiaOp extends LinearOpMode {
                 telemetry.addData("State", "Locating VuMark");
                 if (backLeft.getPower() > 0)
                 {
-                    backLeft.setPower(0.1);
-                    backRight.setPower(-0.1);
-                    frontLeft.setPower(0.1);
-                    frontRight.setPower(-0.1);
+                    backLeft.setPower(0.3);
+                    backRight.setPower(-0.3);
+                    frontLeft.setPower(0.3);
+                    frontRight.setPower(-0.3);
                 }
                 else if (backLeft.getPower() < 0 || backLeft.getPower() == 0)
                 {
-                    backLeft.setPower(-0.1);
-                    backRight.setPower(0.1);
-                    frontLeft.setPower(-0.1);
-                    frontRight.setPower(0.1);
+                    backLeft.setPower(-0.3);
+                    backRight.setPower(0.3);
+                    frontLeft.setPower(-0.3);
+                    frontRight.setPower(0.3);
                 }
             }
 

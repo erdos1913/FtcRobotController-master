@@ -49,10 +49,9 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "DuckOp", group = "Concept")
-@Disabled
+@TeleOp(name = "ObjectIdentification", group = "Concept")
 public class DuckOp extends LinearOpMode {
-    private static final String TFOD_MODEL_ASSET = "model_unquant.tflite";
+    private static final String TFOD_MODEL_ASSET = "/Users/kfareed24/Documents/GitHub/FtcRobotController-master/FtcRobotController/src/main/assets/model_unquant.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Duck";
     private static final String LABEL_SECOND_ELEMENT = "Cube";
     private static final String LABEL_THIRD_ELEMENT = "Ball";
@@ -100,7 +99,7 @@ public class DuckOp extends LinearOpMode {
             // The TensorFlow software will scale the input images from the camera to a lower resolution.
             // This can result in lower detection accuracy at longer distances (> 55cm or 22").
             // If your target is at distance greater than 50 cm (20") you can adjust the magnification value
-            // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
+            // to artificially zoom in to the center of zloooimage.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
             tfod.setZoom(2.5, 16.0/9.0);
@@ -118,7 +117,7 @@ public class DuckOp extends LinearOpMode {
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
-                        telemetry.addData("# Object Detected", updatedRecognitions.size());
+                        telemetry.addData("# Objects Detected", updatedRecognitions.size());
                         // step through the list of recognitions and display boundary info.
                         int i = 0;
                         for (Recognition recognition : updatedRecognitions) {
@@ -165,7 +164,7 @@ public class DuckOp extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.minResultConfidence = 0.1f;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT, LABEL_THIRD_ELEMENT);
     }

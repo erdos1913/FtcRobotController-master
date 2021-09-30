@@ -1,9 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.telephony.mbms.MbmsErrors;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 
 public class Functions {
     static void initialize(DcMotor lift, Servo trigger, DcMotor flywheel, TouchSensor bottom, DcMotor intake) {
@@ -72,5 +84,157 @@ public class Functions {
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //  sleep(250);   // optional pause after each move
+    }
+    static void park(VuforiaTrackable relicTemplate, DcMotor frontRight, DcMotor frontLeft, DcMotor backLeft, DcMotor backRight, float error_range)
+    {
+        boolean rotated;
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+
+
+            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getFtcCameraFromTarget();
+
+            if (pose != null) {
+                VectorF trans = pose.getTranslation();
+                Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+                //Get transform
+                double tX = trans.get(0);
+                double tY = trans.get(1);
+                double tZ = trans.get(2);
+                //Get rotation
+                double rX = rot.firstAngle;
+                double rY = rot.secondAngle;
+                double rZ = rot.thirdAngle;
+                //Check if you're far away
+                if (tZ > 600) {
+                    if (backLeft.getPower() == 0) {
+                        backLeft.setPower(-0.7);
+                        backRight.setPower(-0.7);
+                        frontLeft.setPower(-0.7);
+                        frontRight.setPower(-0.7);
+                    }
+                }
+                else if (tZ > 200)
+                {
+                    try {
+                        if (rotated) {
+                            backLeft.setPower(-0.7);
+                            backRight.setPower(-0.7);
+                            frontLeft.setPower(-0.7);
+                            frontRight.setPower(-0.7);
+                        } else if (Math.abs(backLeft.getPower()) > 0) {
+                            backLeft.setPower(0);
+                            backRight.setPower(0);
+                            frontLeft.setPower(0);
+                            frontRight.setPower(0);
+                        }
+                    }
+                    catch (Exception MbmsErrors)
+                    {
+                        backLeft.setPower(-0.7);
+                        backRight.setPower(-0.7);
+                        frontLeft.setPower(-0.7);
+                        frontRight.setPower(-0.7);
+                    }
+                }
+                //If you've reached the final parked position
+                else {
+                    if (Math.abs(backLeft.getPower()) > 0) {
+                        backLeft.setPower(0);
+                        backRight.setPower(0);
+                        frontLeft.setPower(0);
+                        frontRight.setPower(0);
+                    }
+                }
+                //If you aren't perfectly straight
+                if (rY != 0) {
+                    //Determine which direction
+                    if (rY > 0) {
+                        if ((180 - rY) > 0) {
+                            if ((180 - rY) > error_range) {
+                                backLeft.setPower(-0.7);
+                                backRight.setPower(0.7);
+                                frontLeft.setPower(-0.7);
+                                frontRight.setPower(0.7);
+                            } else {
+                                if (Math.abs(backLeft.getPower()) > 0) {
+                                    backLeft.setPower(0);
+                                    backRight.setPower(0);
+                                    frontLeft.setPower(0);
+                                    frontRight.setPower(0);
+                                    rotated = true;
+                                }
+                            }
+                        } else {
+                            if (Math.abs(backLeft.getPower()) > 0) {
+                                rotated = true;
+                                backLeft.setPower(0);
+                                backRight.setPower(0);
+                                frontLeft.setPower(0);
+                                frontRight.setPower(0);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if ((180 - Math.abs(rY)) > 0)
+                        {
+                            if ((180 - Math.abs(rY)) > error_range)
+                            {
+                                backRight.setPower(-0.7);
+                                backLeft.setPower(0.7);
+                                frontRight.setPower(-0.7);
+                                frontLeft.setPower(0.7);
+                                rotated = true;
+                            }
+                            else
+                            {
+                                if (Math.abs(backLeft.getPower()) > 0) {
+                                    rotated = true;
+                                    backLeft.setPower(0);
+                                    backRight.setPower(0);
+                                    frontLeft.setPower(0);
+                                    frontRight.setPower(0);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (Math.abs(backLeft.getPower()) > 0) {
+                                rotated = true;
+                                backLeft.setPower(0);
+                                backRight.setPower(0);
+                                frontLeft.setPower(0);
+                                frontRight.setPower(0);
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                if (Math.abs(backLeft.getPower()) > 0) {
+                    backLeft.setPower(0);
+                    backRight.setPower(0);
+                    frontLeft.setPower(0);
+                    frontRight.setPower(0);
+                }
+            }
+        }
+        else {
+            if (backLeft.getPower() > 0)
+            {
+                backLeft.setPower(0.3);
+                backRight.setPower(-0.3);
+                frontLeft.setPower(0.3);
+                frontRight.setPower(-0.3);
+            }
+            else if (backLeft.getPower() < 0 || backLeft.getPower() == 0)
+            {
+                backLeft.setPower(-0.3);
+                backRight.setPower(0.3);
+                frontLeft.setPower(-0.3);
+                frontRight.setPower(0.3);
+            }
+        }
     }
 }
