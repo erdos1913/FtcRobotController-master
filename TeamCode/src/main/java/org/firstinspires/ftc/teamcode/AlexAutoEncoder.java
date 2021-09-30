@@ -95,11 +95,13 @@ public class AlexAutoEncoder extends LinearOpMode {
         robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -107,6 +109,7 @@ public class AlexAutoEncoder extends LinearOpMode {
                 robot.frontRight.getCurrentPosition(),
                 robot.backLeft.getCurrentPosition(),
                 robot.backRight.getCurrentPosition());
+                robot.arm.getCurrentPosition();
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -143,8 +146,17 @@ public class AlexAutoEncoder extends LinearOpMode {
             if(gamepad1.left_bumper) {
                 Functions.initialize(robot.lift, robot.trigger, robot.flywheel, robot.bottom, intake);
             }
+            if(gamepad1.dpad_left) {
+                robot.flywheel.setPower(0.3);
+            }
+            if(gamepad1.left_stick_y != 0) {
+                robot.arm.setPower(gamepad1.left_stick_y);
+            }
+            if(gamepad1.dpad_up) {
+                robot.grabber.setPosition(1);
+            }
             if(gamepad1.dpad_down) {
-                robot.flywheel.setPower(0.8);
+                robot.grabber.setPosition(0);
             }
         }
 
